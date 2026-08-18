@@ -120,9 +120,11 @@ body {
     overflow-y: visible;
 
     width: 100%;        /* Заставляем сетку растянуться на всю ширину меню */
-    max-width: 800px;
+    max-width: 900px;
+    justify-content: center; /* Центрируем сами колонки с уровнями внутри сетки */
+    justify-items: center;   /* Центрируем кнопки внутри каждой ячейки */
+    box-sizing: border-box;
 }
-
 
 /* === Базовая кнопка уровня === */
 .level-btn {
