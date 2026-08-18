@@ -118,6 +118,9 @@ body {
     gap: 20px;
     margin-bottom: 40px;
     overflow-y: visible;
+
+    width: 100%;        /* Заставляем сетку растянуться на всю ширину меню */
+    max-width: 800px;
 }
 
 
