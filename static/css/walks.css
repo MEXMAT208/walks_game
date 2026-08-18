@@ -32,7 +32,6 @@ body {
     font-family: 'Georgia', serif;
     display: flex;
     flex-direction: column;
-    /* background: #2c3e50;  Тёмный фон для контраста */
 }
 
 /* Верхняя панель — на всю ширину */
