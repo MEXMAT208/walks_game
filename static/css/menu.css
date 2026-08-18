@@ -52,23 +52,9 @@ body {
 }
 
 .menu-container {
-    width: 100%;
-    height: 100%;
-    max-height: 100%;
-
-    /* Включаем внутренний скролл, если контент (50 уровней) не влезает */
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    /* Делает прокрутку плавной на iOS */
-    -webkit-overflow-scrolling: touch;
-    box-sizing: border-box;
-
-    /* ДОБАВЛЯЕМ: Центрируем всё содержимое меню по горизонтали */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px; /* Чтобы элементы не прижимались вплотную к краям фрейма */
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
 }
 
 /* Заголовок */
