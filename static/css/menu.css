@@ -113,9 +113,11 @@ body {
 /* Сетка уровней */
 .levels-grid {
     display: grid !important;
+    height: auto;
     grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important;
     gap: 20px;
     margin-bottom: 40px;
+    overflow-y: visible;
 }
 
 
