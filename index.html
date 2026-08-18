@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <title>Walks</title>
+
+    <link rel="icon" type="image/png" href="./static/favicon-16x16.png" sizes="16x16" />
+    <link rel="icon" type="image/png" href="./static/favicon-32x32.png" sizes="32x32" />
+    <link rel="icon" type="image/png" href="./static/favicon-96x96.png" sizes="96x96" />
+    <link rel="apple-touch-icon" href="./static/apple-touch-icon.png" sizes="180x180" />
+
+    <!-- ПОДКЛЮЧАЕМ SDK VK BRIDGE -->
+    <script src="https://unpkg.com/@vkontakte/vk-bridge/dist/browser.min.js"></script>
+    <script>
+        // Инициализация VK Bridge сразу при загрузке страницы
+        vkBridge.send('VKWebAppInit')
+            .then(data => {
+                console.log('VK Bridge успешно инициализирован', data);
+            })
+            .catch(error => {
+                console.error('Ошибка инициализации VK Bridge', error);
+            });
+    </script>
+
+    <link rel="stylesheet" href="./static/css/walks.css">
+    <link rel="stylesheet" href="./static/css/menu.css">
+</head>
+<body>
+
+    <!-- ================= БЛОК ГЛАВНОГО МЕНЮ ================= -->
+    <div id="screen-menu" class="menu-container">
+        <h1 class="game-title">Walks</h1>
+        <div class="player-stats">
+            <span class="stat">
+                🏆 <span data-lang-key="completed">Пройдено: </span>
+                <strong id="completed-count">0 / 50</strong>
+            </span>
+        </div>
+        <div class="levels-grid" id="levels-grid">
+            <div class="loading">Загрузка уровней...</div>
+        </div>
+        <button id="random-btn" class="random-btn" style="display: block; margin: 20px auto 0 auto; padding: 12px 24px; font-size: 18px; cursor: pointer;" data-lang-key="random_level">
+            🎞 Случайный уровень
+        </button>
+    </div>
+
+    <!-- Тост для заблокированных уровней (общий) -->
+    <div class="locked-toast" id="lockedToast">
+        <span class="locked-toast-icon">🔒</span>
+        <span class="locked-toast-text" id="lockedToastText">Пройдите предыдущий уровень</span>
+    </div>
+
+
+    <!-- ================= БЛОК ИГРОВОГО ПРОЦЕССА ================= -->
+    <div id="screen-game" style="display: none; width: 100%; height: 100%;">
+        <div class="top-panel" id="top_panel">
+            <span class="level-title" id="level-title">
+                <span id="level-text" data-lang-key="level">Уровень </span>
+                <strong id="level-number">1</strong>
+            </span>
+            <div class="controls-group">
+                <span class="moves-info" id="moves-info">
+                    <span data-lang-key="moves">Осталось ходов: </span>
+                    <strong id="moves-count">0</strong>
+                </span>
+                <button id="btn-sound" class="panel-btn btn-sound">🔊</button>
+                <button id="btn-restart" class="panel-btn btn-restart">🔄</button>
+                <button id="btn-to-menu" class="panel-btn btn-to-menu">🏠</button>
+            </div>
+        </div>
+
+        <div class="hint-panel" id="hint-panel">
+            <span class="hint-text" id="hint-text">Не вставайте в огонь!</span>
+        </div>
+
+        <div class="board" id="board"></div>
+
+        <!-- Модальные окна (победа, проигрыш, ловушка) -->
+        <div id="win-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <h2 data-lang-key="win">🎉 Уровень пройден!</h2>
+                <p id="win-message" data-lang-key="win_descr">Отличная работа!</p>
+                <div class="modal-buttons">
+                    <button id="btn-win-menu" class="btn btn-menu" data-lang-key="to_menu">🏠 В меню</button>
+                    <button id="btn-win-replay" class="btn btn-retry" data-lang-key="retry">🔄 Попробовать снова</button>
+                    <button id="btn-win-next" class="btn btn-next" data-lang-key="next">Дальше →</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="lose-modal" class="modal" style="display: none;">
+            <div class="modal-content lose-content">
+                <h2 data-lang-key="lose">⏳ Ходы закончились!</h2>
+                <p data-lang-key="lose_descr"> Попробуйте ещё раз</p>
+                <div class="modal-buttons">
+                    <button id="btn-lose-retry" class="btn btn-retry" data-lang-key="retry">🔄 Попробовать снова</button>
+                    <button id="btn-lose-menu" class="btn btn-menu" data-lang-key="to_menu">🏠 В меню</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="trap-modal" class="modal" style="display: none;">
+            <div class="modal-content trap-content">
+                <h2 data-lang-key="trap">💀 Вы попали в ловушку!</h2>
+                <p data-lang-key="trap_descr">Попробуйте обойти опасное место</p>
+                <div class="modal-buttons">
+                    <button id="btn-trap-retry" class="btn btn-retry" data-lang-key="retry">🔄 Попробовать снова</button>
+                    <button id="btn-trap-menu" class="btn btn-menu" data-lang-key="to_menu">🏠 В меню</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="loading-content">
+            <div class="spinner-large"></div>
+            <p data-lang-key="generating">Генерируем уровень...</p>
+        </div>
+    </div>
+
+    <!-- Скрипты -->
+    <script src="./levels.js"></script>
+    <script src="./generator.js"></script>
+    <script src="./app.js"></script>
+</body>
+</html>
