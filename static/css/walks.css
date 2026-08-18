@@ -123,7 +123,7 @@ body {
     border: 2px solid #ffc107;
     border-radius: 12px;
     margin: 0 auto 0 auto;  /* ← Центрируем и добавляем отступ снизу */
-    width: 40%;  /* ← Или фиксированная ширина, как у вашего board */
+    width: 50%;  /* ← Или фиксированная ширина, как у вашего board */
     box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
 }
 
