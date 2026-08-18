@@ -121,8 +121,12 @@ body {
     overflow-y: visible;
 
     width: 100%;        /* Заставляем сетку растянуться на всю ширину меню */
-    max-width: 900px;
+    max-width: 600px;
     justify-content: center; /* Центрируем сами колонки с уровнями внутри сетки */
+
+    margin-left: auto;
+    margin-right: auto;
+
     box-sizing: border-box;
 }
 
