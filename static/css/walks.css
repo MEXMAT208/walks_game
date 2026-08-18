@@ -1,0 +1,901 @@
+canvas, body {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10+ */
+  user-select: none; /* Стандарт */
+  -webkit-touch-callout: none; /* iOS Safari */
+}
+
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Для всех интерактивных элементов */
+button,
+.hero,
+.level-btn,
+.panel-btn,
+[onclick] {
+    outline: none;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* Убираем синее выделение текста */
+::selection {
+    background: transparent;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    font-family: 'Georgia', serif;
+    display: flex;
+    flex-direction: column;
+    /* background: #2c3e50;  Тёмный фон для контраста */
+}
+
+/* Верхняя панель — на всю ширину */
+.top-panel {
+    width: 100%;
+    height: 10%;
+    padding: 0px 0px;
+    box-sizing: border-box;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    /* Деревянная текстура */
+    background:
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 40px,
+            rgba(0, 0, 0, 0.04) 40px,
+            rgba(0, 0, 0, 0.04) 42px
+        ),
+        linear-gradient(
+            180deg,
+            #e8c9a0 0%,
+            #d4a574 40%,
+            #b8864e 100%
+        );
+
+    border-bottom: 5px solid #6b4423;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+    color: #fff;
+    font-family: 'Georgia', serif;
+    font-size: 20px;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+.level-title {
+    font-weight: bold;
+    font-size: 24px;
+    flex-shrink: 0;
+}
+
+.hint-text {
+    font-size: clamp(12px, 2vw, 18px);
+    color: #ffd700;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+    font-weight: 500;
+    text-align: center;
+    flex: 1;  /* Занимает всё свободное пространство */
+    margin: 0 20px;  /* Отступы от краёв */
+    white-space: nowrap;
+    opacity: 0.9;
+    transition: opacity 0.5s ease;
+}
+
+/* Когда подсказка пустая — скрываем */
+.hint-text:empty {
+    display: none;
+}
+
+/* Анимация появления */
+.hint-text.show {
+    animation: hint-appear 1s ease;
+}
+
+@keyframes hint-appear {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 0.9; transform: translateY(0); }
+}
+
+.moves-info {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 18px;
+    flex-shrink: 0;  /* Не сжимается */
+}
+
+/* Панель подсказки */
+.hint-panel {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 15px;
+    background: linear-gradient(135deg, #fff9c4 0%, #ffe082 100%);
+    border: 2px solid #ffc107;
+    border-radius: 12px;
+    margin: 0 auto 0 auto;  /* ← Центрируем и добавляем отступ снизу */
+    width: 40%;  /* ← Или фиксированная ширина, как у вашего board */
+    box-shadow: 0 4px 12px rgba(255, 193, 7, 0.2);
+}
+
+.hint-panel:empty {
+    display: none;
+}
+
+.hint-text {
+    color: #5d4037;
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.4;
+    text-shadow: none;
+
+    /* ✅ Разрешаем перенос текста */
+    white-space: normal;        /* Разрешает перенос строк */
+    word-wrap: break-word;      /* Переносит длинные слова */
+    overflow-wrap: break-word;  /* Современный аналог word-wrap */
+    text-align: center;         /* Центрирует текст (опционально) */
+}
+
+.panel-btn.btn-sound {
+    background: rgba(255, 255, 255, 0.2);
+    transition: all 0.3s;
+}
+
+.panel-btn.btn-sound:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+/* Когда звук выключен — делаем красноватым */
+.panel-btn.btn-sound.muted {
+    background: rgba(244, 67, 54, 0.3);
+    border: 2px solid rgba(244, 67, 54, 0.5);
+}
+
+.panel-btn.btn-sound.muted:hover {
+    background: rgba(244, 67, 54, 0.5);
+}
+
+/* Мобильный */
+@media (max-width: 600px) {
+    .hint-panel {
+        width: 70%;
+        padding: 12px 13px;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .hint-icon {
+        font-size: 20px;
+    }
+
+    .hint-text {
+        color: #5d4037;
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 1.4;
+
+        flex: 1;              /* Занимает всё свободное место */
+        min-width: 0;
+
+        /* ✅ Разрешаем перенос текста */
+        white-space: normal;        /* Разрешает перенос строк */
+        word-wrap: break-word;      /* Переносит длинные слова */
+        overflow-wrap: break-word;  /* Современный аналог word-wrap */
+        text-align: center;         /* Центрирует текст (опционально) */
+
+        /* ✅ Ограничиваем ширину, чтобы текст переносился */
+        max-width: 100%;            /* Или фиксированную ширину, например 300px */
+    }
+
+    .moves-info {
+        font-size: 14px;
+        padding: 6px 8px;
+        white-space: nowrap;
+    }
+
+    .panel-btn {
+        width: 38px;
+        height: 38px;
+        font-size: 17px;
+        padding: 0;
+    }
+}
+
+@media (max-width: 420px) {
+    .hint-panel {
+        width: 90%;
+        padding: 10px 12px;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .top-panel {
+        flex-wrap: wrap;
+        gap: 6px;
+        padding: 10px;
+    }
+
+    /* Заголовок — на всю ширину */
+    .level-title {
+        width: 100%;
+        text-align: center;
+        font-size: 20px;
+        order: 1;
+    }
+
+    /* Подсказка — на всю ширину */
+    .hint-text {
+        color: #5d4037;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.4;
+
+        flex: 1;              /* Занимает всё свободное место */
+        min-width: 0;
+
+        /* ✅ Разрешаем перенос текста */
+        white-space: normal;        /* Разрешает перенос строк */
+        word-wrap: break-word;      /* Переносит длинные слова */
+        overflow-wrap: break-word;  /* Современный аналог word-wrap */
+        text-align: center;         /* Центрирует текст (опционально) */
+
+        /* ✅ Ограничиваем ширину, чтобы текст переносился */
+        max-width: 100%;            /* Или фиксированную ширину, например 300px */
+    }
+
+    /* Группа управления — вниз */
+    .controls-group {
+        width: 100%;
+        order: 3;
+        justify-content: space-between;
+        gap: 4px;  /* Минимальный gap */
+        padding-top: 8px;
+        border-top: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    /* Счётчик ходов — только число, без текста */
+    .moves-info {
+        font-size: 14px;
+        padding: 6px 8px;
+        white-space: nowrap;
+    }
+
+    /* Кнопки — 36px (компактно, но тапабельно) */
+    .panel-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 16px;
+        padding: 0;
+    }
+}
+
+
+/* Игровое поле — по центру */
+.board {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    position: relative;
+}
+
+/* Ячейки */
+.square {
+    border-radius: 4px;
+    box-shadow:
+        inset 0 2px 4px rgba(0, 0, 0, 0.2),
+        inset 0 -1px 2px rgba(255, 255, 255, 0.1);
+}
+
+.square.empty {
+    background:
+        linear-gradient(135deg, rgba(255,255,255,0.1), rgba(0,0,0,0.05)),
+        #f4e4c1;
+}
+
+.square.empty.possible:hover {
+    box-shadow:
+        inset 0 2px 4px rgba(0, 0, 0, 0.2),
+        inset 0 -1px 2px rgba(255, 255, 255, 0.1),
+        0 0 15px rgba(255, 220, 100, 0.6);  /* ← золотое свечение */
+    transform: scale(1.02);  /* ← лёгкое увеличение */
+}
+
+.square.wall {
+    /* Деревянная текстура (тёмная) */
+    background:
+        /* Вертикальные волокна */
+        repeating-linear-gradient(
+            90deg,
+            transparent,
+            transparent 6px,
+            rgba(0, 0, 0, 0.2) 6px,
+            rgba(0, 0, 0, 0.2) 8px
+        ),
+        /* Горизонтальные доски */
+        repeating-linear-gradient(
+            0deg,
+            transparent,
+            transparent 20px,
+            rgba(0, 0, 0, 0.3) 20px,
+            rgba(0, 0, 0, 0.3) 22px
+        ),
+        /* Основной цвет тёмного дерева */
+        linear-gradient(
+            135deg,
+            #5c3a1e 0%,
+            #3d2817 50%,
+            #2d1810 100%
+        );
+
+    border: 2px solid #1a0f08;
+    border-radius: 4px;
+
+    box-shadow:
+        inset 0 3px 6px rgba(0, 0, 0, 0.7),
+        inset 0 -1px 3px rgba(255, 200, 100, 0.1),
+        0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.square.finish {
+    /* Золотистый фон — сразу бросается в глаза */
+    background:
+        linear-gradient(135deg, #ffd700 0%, #ffed4e 50%, #f0c000 100%);
+
+    /* Пульсирующая рамка */
+    border: 3px solid #d4af37;
+    border-radius: 8px;
+    animation: finish-pulse 1.5s ease-in-out infinite;
+
+    /* Тень для объёма */
+    box-shadow:
+        0 0 20px rgba(255, 215, 0, 0.6),
+        inset 0 2px 4px rgba(255, 255, 255, 0.5);
+
+    position: relative;
+    z-index: 3;
+}
+
+@keyframes finish-pulse {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(255, 215, 0, 0.6), inset 0 2px 4px rgba(255, 255, 255, 0.5);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.9), inset 0 2px 4px rgba(255, 255, 255, 0.5);
+        transform: scale(1.02);
+    }
+}
+
+
+.square.trap {
+    /* Огненный фон */
+    background:
+        radial-gradient(circle at 50% 80%, #ff4500 0%, #8b0000 70%, #3d0000 100%);
+
+    border: 2px solid #ff4500;
+    border-radius: 4px;
+
+    box-shadow:
+        inset 0 0 20px rgba(255, 69, 0, 0.8),
+        0 0 15px rgba(255, 69, 0, 0.6);
+
+    animation: fire-flicker 0.5s ease-in-out infinite alternate;
+    position: relative;
+    overflow: hidden;
+    overflow: visible;
+    z-index: 2;
+}
+
+/* Языки пламени */
+.square.trap::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 80%;
+    background:
+        radial-gradient(ellipse at 30% 100%, #ff6600 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 100%, #ff4500 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 100%, #ffaa00 0%, transparent 60%);
+    animation: fire-dance 0.8s ease-in-out infinite alternate;
+    z-index: 1;
+}
+
+/* Искры */
+.square.trap::after {
+    content: '';
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background: #ffcc00;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #ff6600, 0 0 20px #ff4500;
+    animation: spark-rise 1s ease-out infinite;
+    z-index: 2;
+}
+
+@keyframes fire-flicker {
+    from { box-shadow: inset 0 0 20px rgba(255, 69, 0, 0.8), 0 0 15px rgba(255, 69, 0, 0.6); }
+    to { box-shadow: inset 0 0 30px rgba(255, 69, 0, 1), 0 0 25px rgba(255, 69, 0, 0.9); }
+}
+
+@keyframes fire-dance {
+    from { transform: scaleY(1) translateY(0); }
+    to { transform: scaleY(1.1) translateY(-5px); }
+}
+
+@keyframes spark-rise {
+    0% { transform: translateX(-50%) translateY(0); opacity: 1; }
+    100% { transform: translateX(-50%) translateY(-30px); opacity: 0; }
+}
+
+/* Фишка героя */
+.hero-piece {
+    border-radius: 50%;
+    cursor: pointer;
+
+    /* Основной градиент — дерево */
+    background:
+        /* Блик сверху */
+        radial-gradient(
+            circle at 30% 25%,
+            rgba(255, 240, 210, 0.8) 0%,
+            transparent 25%
+        ),
+        /* Основной цвет */
+        radial-gradient(
+            circle at 50% 50%,
+            #e8c088 0%,
+            #c49a6c 40%,
+            #8b5a2b 90%,
+            #6b4423 100%
+        );
+
+    /* Объёмные тени */
+    box-shadow:
+        /* Внутренняя тень (углубление по центру) */
+        inset 0 -4px 8px rgba(0, 0, 0, 0.4),
+        inset 0 4px 8px rgba(255, 220, 180, 0.6),
+        /* Внешняя тень (фишка лежит на доске) */
+        0 6px 12px rgba(0, 0, 0, 0.5),
+        0 2px 4px rgba(0, 0, 0, 0.3);
+
+    /* Обводка для реалистичности */
+    border: 2px solid #5c3a1e;
+
+    /* Эффект при наведении */
+    transition: left 0.4s ease, top 0.4s ease, transform 0.2s ease;
+    z-index: 4;
+}
+
+/* Эффект при наведении мыши */
+.hero-piece:hover {
+    transform: scale(1.05);
+}
+
+.hero-piece.finished {
+    pointer-events: none;  /* Отключает все события мыши */
+    cursor: default;
+    opacity: 1 !important;
+    animation: victory-glow 1s ease-in-out infinite;
+}
+
+@keyframes victory-glow {
+    0%, 100% {
+        box-shadow:
+            inset 0 -4px 8px rgba(0, 0, 0, 0.4),
+            inset 0 4px 8px rgba(255, 220, 180, 0.6),
+            0 6px 12px rgba(0, 0, 0, 0.5),
+            0 0 20px rgba(255, 215, 0, 0.8);
+    }
+    50% {
+        box-shadow:
+            inset 0 -4px 8px rgba(0, 0, 0, 0.4),
+            inset 0 4px 8px rgba(255, 220, 180, 0.6),
+            0 6px 12px rgba(0, 0, 0, 0.5),
+            0 0 30px rgba(255, 215, 0, 1);
+    }
+}
+
+/* Эффект при выборе */
+.hero-piece.selected {
+    animation: float 0.6s ease infinite alternate;
+    box-shadow:
+        inset 0 -4px 8px rgba(0, 0, 0, 0.4),
+        inset 0 4px 8px rgba(255, 220, 180, 0.6),
+        0 12px 20px rgba(0, 0, 0, 0.6),
+        0 0 20px rgba(255, 200, 50, 0.8);
+}
+
+@keyframes float {
+    from { transform: translateY(0); }
+    to { transform: translateY(-5px); }
+}
+
+
+
+/* Модальное окно */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 40px;
+    border-radius: 15px;
+    text-align: center;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
+    animation: modalAppear 0.5s ease;
+}
+
+@keyframes modalAppear {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.modal-content h2 {
+    margin: 0 0 10px 0;
+    color: #2c3e50;
+    font-size: 32px;
+}
+
+.modal-content p {
+    margin: 0 0 30px 0;
+    color: #7f8c8d;
+    font-size: 18px;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+/* === Общие стили для всех кнопок === */
+.btn {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: 'Georgia', serif;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+/* === Серая кнопка "В меню" === */
+.btn-menu {
+    background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+    border-color: #6c7a7b;
+}
+
+.btn-menu:hover {
+    background: linear-gradient(135deg, #7f8c8d 0%, #6c7a7b 100%);
+}
+
+/* === Оранжевая кнопка "Ещё раз" === */
+.btn-retry {
+    background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+    border-color: #d35400;
+}
+
+.btn-retry:hover {
+    background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+}
+
+/* === Зелёная кнопка "Дальше" === */
+.btn-next {
+    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+    border-color: #1e8449;
+}
+
+.btn-next:hover {
+    background: linear-gradient(135deg, #27ae60 0%, #1e8449 100%);
+}
+
+
+/* === Группа элементов справа === */
+.controls-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+/* === Базовый стиль кнопок панели === */
+.panel-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    border: 2px solid #6b4423;
+    background: linear-gradient(135deg, #d4a574 0%, #b8864e 100%);
+    color: #fff;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    box-shadow:
+        inset 0 1px 2px rgba(255, 220, 180, 0.4),
+        0 2px 4px rgba(0, 0, 0, 0.3);
+    padding: 0;
+}
+
+.panel-btn:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        inset 0 1px 2px rgba(255, 220, 180, 0.4),
+        0 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.panel-btn:active {
+    transform: translateY(0);
+    box-shadow:
+        inset 0 2px 4px rgba(0, 0, 0, 0.3),
+        0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* === Кнопка "Начать заново" === */
+.btn-restart {
+    background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+    border-color: #d35400;
+}
+
+.btn-restart:hover {
+    background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
+}
+
+
+@keyframes modal-appear {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    border: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    color: #4a3c1a;
+    transition: all 0.2s ease;
+}
+
+.modal-close:hover {
+    background: rgba(0, 0, 0, 0.3);
+    transform: rotate(90deg);
+}
+
+.premium-title {
+    font-size: 32px;
+    color: #3d2e1a;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+
+/* Список преимуществ */
+.premium-features-list {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.feature-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-size: 16px;
+    color: #3d2e1a;
+}
+
+.feature-item:last-child {
+    margin-bottom: 0;
+}
+
+.feature-icon {
+    font-size: 20px;
+}
+
+.feature-text {
+    font-weight: 500;
+}
+
+
+
+.btn-later:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+/* Адаптивность */
+@media (max-width: 600px) {
+    .premium-modal-content {
+        padding: 25px;
+    }
+
+    .premium-title {
+        font-size: 24px;
+    }
+
+    .new-price {
+        font-size: 28px;
+    }
+
+    .feature-item {
+        font-size: 14px;
+    }
+}
+
+
+#win-message {
+    font-size: 18px;
+    color: #7f8c8d;
+    margin: 15px 0;
+    transition: all 0.3s ease;
+}
+
+/* Особое сообщение (ключевой уровень) */
+#win-message.milestone-message {
+    font-size: 22px;
+    font-weight: bold;
+    color: #ffd700;
+    text-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    animation: celebrate-pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes celebrate-pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+/* Оверлей — на весь экран, поверх всего */
+.loading-overlay {
+    display: flex;
+    position: fixed;          /* Фиксированное позиционирование */
+    top: 0;
+    left: 0;
+    width: 100%;              /* На всю ширину */
+    height: 100%;             /* На всю высоту */
+    background: rgba(0, 0, 0, 0.7);  /* Полупрозрачный черный фон */
+    justify-content: center;  /* Центрирование по горизонтали */
+    align-items: center;      /* Центрирование по вертикали */
+    z-index: 9999;            /* Поверх всего */
+    backdrop-filter: blur(5px);  /* Размытие фона (красивый эффект) */
+}
+
+
+/* Контент внутри оверлея */
+.loading-content {
+    text-align: center;
+    color: white;
+}
+
+/* Спиннер */
+.spinner-large {
+    width: 60px;
+    height: 60px;
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    border-top-color: #9b59b6;  /* Цвет вращающейся части */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Текст под спиннером */
+.loading-content p {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+    color: white;
+}
+
+#screen-game {
+    display: flex !important; /* Когда экран игры активен, он сам управляет своими элементами */
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+}
+
+#screen-game[style*="display: none"] {
+    display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#screen-game {
+    position: absolute !important; /* Полностью изолирует игру от Flexbox-родителя */
+    top: 0 !important;
+    left: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-sizing: border-box !important;
+}
+
+.top-panel {
+    width: 100% !important;
+    margin-left: 0 !important; /* Принудительно обнуляет любые отступы слева */
+    margin-right: 0 !important;
+}
+
+.level-title {
+    margin-left: 10px !important;
+}
+
+.controls-group {
+    margin-right: 10px !important;
+}
+
+.hidden {
+    display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
