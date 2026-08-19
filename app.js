@@ -163,9 +163,9 @@ function playRandomWithAds() {
                     // Проверяем, готова ли фоновая генерация уровня
                     const checkAndDraw = () => {
                         if (prepared_level_data) {
-                            console.log('Here', prepared_level_data)
                             document.getElementById('loading-overlay').classList.add('hidden')
-                            draw_level(prepared_level_data);
+                            clear_level();
+                            switchToGameScreen('random', prepared_level_data);
                         } else {
                             console.log('Ждем окончания генерации уровня...');
                             setTimeout(checkAndDraw, 50); // Ждем, если генерация затянулась
@@ -179,13 +179,15 @@ function playRandomWithAds() {
             })
             .catch(error => {
                 console.error('Ошибка при показе Rewarded рекламы в VK:', error);
+                document.getElementById('loading-overlay').classList.add('hidden');
 
                 // Фолбэк: если реклама сломалась или не загрузилась, ВК рекомендует всё равно пустить игрока
+                clear_level();
                 if (prepared_level_data) {
-                    draw_level(prepared_level_data)
+                    switchToGameScreen('random', prepared_level_data);
                 } else {
                     let level_data = generate_level();
-                    draw_level(level_data)
+                    switchToGameScreen('random', level_data);
                 }
             });
     }, 20);
