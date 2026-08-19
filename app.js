@@ -1019,7 +1019,7 @@ async function Start() {
 
 
 // === Запуск ===
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const prevBtn = document.getElementById('prev-page-btn');
     const nextBtn = document.getElementById('next-page-btn');
 
@@ -1042,6 +1042,11 @@ document.addEventListener('DOMContentLoaded', () => {
     cup = document.getElementById('cup');
     cup.onclick = () => {
         showVKLeaderboardWindow();
+    }
+
+    rnd_button = document.getElementById('random-btn');
+    rnd_button.onclick = () => {
+        playRandomWithAds();
     }
 
     await Start();
