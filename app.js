@@ -145,11 +145,6 @@ function playRandomWithAds() {
         setTimeout(() => {
             prepared_level_data = generate_level();
             console.log('Уровень успешно сгенерирован во время рекламы!');
-
-            // Если реклама вдруг завершилась ДО того, как сгенерировался уровень и код в .then() уже сработал
-            if (isAdClosed && prepared_level_data) {
-                draw_level(prepared_level_data)
-            }
         }, 50);
 
         // 2. Вызываем рекламу за вознаграждение в VK
