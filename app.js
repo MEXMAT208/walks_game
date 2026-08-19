@@ -136,9 +136,8 @@ function get_level_state(level_id) {
 function playRandomWithAds() {
     document.getElementById('loading-overlay').classList.remove('hidden');
 
-    isAdClosed = false;
-
     setTimeout(() => {
+        let isAdClosed = false;
         let prepared_level_data = null;
         console.log('Запуск Rewarded видео VK. Начинаем генерацию уровня в фоне...');
 
