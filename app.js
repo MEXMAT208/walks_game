@@ -256,6 +256,11 @@ async function renderLevels() {
         playRandomWithAds();
     }
 
+    cup = document.getElementById('cup');
+    cup.onclick = () => {
+        showVKLeaderboardWindow();
+    }
+
     updateStats(completed_levels.length, levels.length);
 }
 
@@ -918,14 +923,32 @@ function initLocalization(lang) {
 }
 
 function updateVKLeaderboard(score) {
-    vkBridge.send("VKWebAppShowLeaderBoardBox", {
-        "user_result": parseInt(score) // Передаем только целое число (количество уровней)
+    // Используем фоновое сохранение в VK Storage.
+    // Ключ 'level' или 'score' распознается игровой платформой VK автоматически
+    vkBridge.send("VKWebAppStorageSet", {
+        "key": "level",
+        "value": String(score) // VK принимает только строковые значения
     })
     .then(data => {
-        console.log("Результат успешно обновлен в таблице лидеров VK", data);
+        if (data.result) {
+            console.log("Рекорд успешно обновлен в VK в фоновом режиме.");
+        }
     })
     .catch(error => {
-        console.error("Ошибка обновления лидерборда:", error);
+        console.error("Ошибка фонового обновления лидерборда в VK:", error);
+    });
+}
+
+function showVKLeaderboardWindow() {
+    // Вызываем окно лиги друзей ТОЛЬКО при нажатии на кнопку кубка в меню
+    vkBridge.send("VKWebAppShowLeaderBoardBox", {
+        "user_result": 0 // Передаем 0, чтобы просто открыть окно без перезаписи очков
+    })
+    .then(data => {
+        console.log("Игрок закрыл окно лидерборда.");
+    })
+    .catch(error => {
+        console.error("Не удалось открыть окно лидерборда:", error);
     });
 }
 
