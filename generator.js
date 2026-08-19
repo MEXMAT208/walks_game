@@ -232,9 +232,9 @@ function try_generate_level(structure, attempts, var_limit) {
 
 function generate_level() {
     const structures = [
-        { n: [4, 5], m: [4, 5, 6], hero: 2, wall: [0, 1, 2], trap: [1, 2, 3], depth: 3 },
-        { n: [4, 5], m: [4, 5, 6], hero: 3, wall: [0, 1, 2], trap: [1, 2, 3], depth: 3 },
-        { n: [4, 5], m: [4, 5, 6], hero: 3, wall: [0, 1, 2], trap: [1, 2, 3], depth: 4 }
+        { n: [4, 5], m: [4, 5], hero: 2, wall: [0, 1, 2], trap: [1, 2, 3], depth: 3 },
+        { n: [4, 5], m: [4, 5], hero: 3, wall: [0, 1, 2], trap: [1, 2, 3], depth: 3 },
+        { n: [4, 5], m: [4, 5], hero: 3, wall: [0, 1, 2], trap: [1, 2, 3], depth: 4 }
     ];
 
     for (var i = 1; i < 3; i ++) {
