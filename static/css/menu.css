@@ -118,7 +118,6 @@ body {
 /* === Базовая кнопка уровня === */
 .level-btn {
     position: relative;
-    width: 120px !important;
     height: 120px;
     border-radius: 12px;
     cursor: pointer;
