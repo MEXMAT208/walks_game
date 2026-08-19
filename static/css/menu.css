@@ -105,17 +105,18 @@ body {
     box-sizing: border-box;
 }
 
+#cup {
+ cursor: pointer;
+}
+
 /* Статистика игрока */
 .player-stats {
     display: flex;
     justify-content: center;
     gap: 30px;
-    margin-bottom: 40px;
+    margin-bottom: 10px;
 }
 
-#cup {
- cursor: pointer;
-}
 
 .stat {
     background: rgba(0, 0, 0, 0.4);
@@ -143,14 +144,14 @@ body {
 /* Сетка уровней */
 .levels-grid {
     display: grid !important;
-    /* 4 колонки ровно по 80px */
     grid-template-columns: repeat(5, 120px) !important;
-    /* 3 ряда ровно по 80px */
     grid-template-rows: repeat(3, 100px) !important;
     gap: 15px;
     width: auto;
     height: auto;
-    overflow: hidden; /* Никакого скролла! */
+
+    /* 🔥 ИСПРАВЛЕНО: Разрешаем кнопкам вылезать за рамки сетки при наведении */
+    overflow: visible !important;
     margin: 0 !important;
 }
 
@@ -216,6 +217,7 @@ body {
         inset 0 -2px 5px rgba(0, 0, 0, 0.3),
         0 8px 20px rgba(0, 0, 0, 0.5);
     border-color: #ffd700;
+    z-index: 10 !important;
 }
 
 /* === Пройденный уровень (золотой) === */
@@ -236,6 +238,7 @@ body {
         inset 0 2px 5px rgba(255, 255, 255, 0.5),
         inset 0 -2px 5px rgba(0, 0, 0, 0.2),
         0 8px 25px rgba(255, 215, 0, 0.6);
+    z-index: 10 !important;
 }
 
 /* === Закрытый уровень === */
@@ -369,7 +372,6 @@ body {
     }
 }
 
-
 .btn-premium:hover {
     transform: scale(1.05);
     box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
@@ -481,7 +483,6 @@ body {
 .btn-later:hover {
     background: rgba(0, 0, 0, 0.1);
 }
-
 
 
 /* ==========================================
