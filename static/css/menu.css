@@ -100,10 +100,11 @@ body {
 .levels-grid {
     display: grid !important;
     height: auto;
+    max-height: none;
     grid-template-columns: repeat(auto-fill, 140px) !important;
     gap: 20px;
     margin-bottom: 40px;
-    overflow-y: visible;
+    overflow: visible;
 
     width: 100%;        /* Заставляем сетку растянуться на всю ширину меню */
     max-width: 900px;
