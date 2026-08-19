@@ -136,6 +136,8 @@ function get_level_state(level_id) {
 function playRandomWithAds() {
     document.getElementById('loading-overlay').classList.remove('hidden');
 
+    isAdClosed = false;
+
     setTimeout(() => {
         let prepared_level_data = null;
         console.log('Запуск Rewarded видео VK. Начинаем генерацию уровня в фоне...');
@@ -162,6 +164,7 @@ function playRandomWithAds() {
                     // Проверяем, готова ли фоновая генерация уровня
                     const checkAndDraw = () => {
                         if (prepared_level_data) {
+                            document.getElementById('loading-overlay').classList.add('hidden')
                             draw_level(prepared_level_data);
                         } else {
                             console.log('Ждем окончания генерации уровня...');
@@ -182,12 +185,11 @@ function playRandomWithAds() {
                     draw_level(prepared_level_data)
                 } else {
                     let level_data = generate_level();
-                    draw_level(prepared_level_data)
+                    draw_level(level_data)
                 }
             });
     }, 20);
 }
-
 
 
 function unlockPremiumLevelWithAds(level_id) {
