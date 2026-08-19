@@ -55,6 +55,7 @@ body {
     max-width: 900px;
     margin: 0 auto;
     text-align: center;
+    padding-top: 30px !important;
 }
 
 /* Заголовок */
@@ -62,7 +63,7 @@ body {
 .game-title {
     width: 100%;         /* ДОБАВЛЯЕМ: Растягиваем блок на всю ширину */
     text-align: center;  /* ДОБАВЛЯЕМ: Центрируем текст внутри этого блока */
-    font-size: 64px;
+    font-size: 60px;
     color: #ffd700;
     text-shadow:
         3px 3px 0 #8b6914,

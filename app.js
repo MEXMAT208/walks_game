@@ -256,7 +256,7 @@ function renderLevels() {
 
     // Обновляем состояние стрелочек и надписи страницы
     updatePaginationControls();
-    updateStats(completed_levels.length, levels.length);
+    updateStats(completed_levels.length, totalLevels);
 }
 
 function updatePaginationControls() {
