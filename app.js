@@ -160,6 +160,8 @@ function playRandomWithAds() {
                 if (data.result) {
                     console.log('Видео успешно досмотрено до конца! Выдаем уровень...');
 
+                    console.log('Here', prepared_level_data)
+
                     // Проверяем, готова ли фоновая генерация уровня
                     const checkAndDraw = () => {
                         if (prepared_level_data) {
