@@ -160,11 +160,10 @@ function playRandomWithAds() {
                 if (data.result) {
                     console.log('Видео успешно досмотрено до конца! Выдаем уровень...');
 
-                    console.log('Here', prepared_level_data)
-
                     // Проверяем, готова ли фоновая генерация уровня
                     const checkAndDraw = () => {
                         if (prepared_level_data) {
+                            console.log('Here', prepared_level_data)
                             document.getElementById('loading-overlay').classList.add('hidden')
                             draw_level(prepared_level_data);
                         } else {
