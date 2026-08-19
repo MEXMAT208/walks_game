@@ -113,7 +113,7 @@ body {
 .levels-grid {
     display: grid !important;
     /* 4 колонки ровно по 80px */
-    grid-template-columns: repeat(4, 120px) !important;
+    grid-template-columns: repeat(5, 120px) !important;
     /* 3 ряда ровно по 80px */
     grid-template-rows: repeat(3, 100px) !important;
     gap: 15px;
@@ -305,8 +305,10 @@ body {
         font-size: 44px;
     }
     .levels-grid {
-        grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));  /* ← 75px = 4 колонки */
-        gap: 10px;
+        grid-template-columns: repeat(3, 120px) !important;
+        /* 3 ряда ровно по 80px */
+        grid-template-rows: repeat(5, 100px) !important;
+        gap: 8px;
     }
     .level-btn {
         height: auto;
@@ -326,7 +328,9 @@ body {
         font-size: 36px;
     }
     .levels-grid {
-        grid-template-columns: repeat(4, 1fr);
+        grid-template-columns: repeat(5, 90px) !important;
+    /* 3 ряда ровно по 80px */
+        grid-template-rows: repeat(3, 80px) !important;
         gap: 8px; /* Уменьшили с 10px, чтобы освободить 6px места */
         padding-left: 0;  /* Сбрасываем лишние отступы, */
         padding-right: 0; /* если они были у самой сетки */
