@@ -222,6 +222,7 @@ function renderLevels() {
 
     for (let i = startIndex; i < endIndex; i++) {
         const levelNum = i + 1;
+        const btn = document.createElement('div');
 
         const state = get_level_state(levelNum);
 
