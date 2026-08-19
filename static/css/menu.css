@@ -113,9 +113,9 @@ body {
 .levels-grid {
     display: grid !important;
     /* 4 колонки ровно по 80px */
-    grid-template-columns: repeat(4, 80px) !important;
+    grid-template-columns: repeat(4, 120px) !important;
     /* 3 ряда ровно по 80px */
-    grid-template-rows: repeat(3, 80px) !important;
+    grid-template-rows: repeat(3, 100px) !important;
     gap: 15px;
     width: auto;
     height: auto;
@@ -269,6 +269,7 @@ body {
 
 /* Кнопка случайного уровня */
 .random-btn {
+    margin-top: 50px;
     padding: 15px 40px;
     font-size: 20px;
     font-family: 'Georgia', serif;
