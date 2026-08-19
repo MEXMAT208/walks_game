@@ -14,7 +14,7 @@ let level_data
 let currentLang = 'en';
 
 let currentPage = 0;
-const levelsPerPage = 12; // Сколько уровней показывать на одной странице (4x3 = 12)
+const levelsPerPage = 15; // Сколько уровней показывать на одной странице (4x3 = 12)
 const totalLevels = 50;
 
 const sounds = {};
