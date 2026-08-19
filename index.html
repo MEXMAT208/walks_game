@@ -34,15 +34,28 @@
     <div id="screen-menu" class="menu-container">
         <h1 class="game-title">Walks</h1>
         <div class="player-stats">
-            <span class="stat" id="cup">
+            <span class="stat">
                 🏆 <span data-lang-key="completed">Пройдено: </span>
                 <strong id="completed-count">0 / 50</strong>
             </span>
         </div>
-        <div class="levels-grid" id="levels-grid">
-            <div class="loading">Загрузка уровней...</div>
+
+        <!-- КОНТЕЙНЕР ДЛЯ СТРАНИЦ УРОВНЕЙ -->
+        <div class="pagination-wrapper">
+            <button id="prev-page-btn" class="page-nav-btn">◀</button>
+
+            <!-- Сюда JS будет выводить по 12 уровней за раз -->
+            <div class="levels-grid" id="levels-grid">
+                <div class="loading">Загрузка...</div>
+            </div>
+
+            <button id="next-page-btn" class="page-nav-btn">▶</button>
         </div>
-        <button id="random-btn" class="random-btn" style="display: block; margin: 20px auto 0 auto; padding: 12px 24px; font-size: 18px; cursor: pointer;" data-lang-key="random_level">
+
+        <!-- Индикатор страниц (например, "Страница 1 / 5") -->
+        <div id="page-indicator" class="page-indicator">Страница 1 / 5</div>
+
+        <button id="random-btn" class="random-btn" data-lang-key="random_level">
             🎞 Случайный уровень
         </button>
     </div>

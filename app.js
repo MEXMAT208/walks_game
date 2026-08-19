@@ -13,6 +13,10 @@ let curr_level
 let level_data
 let currentLang = 'en';
 
+let currentPage = 0;
+const levelsPerPage = 12; // Сколько уровней показывать на одной странице (4x3 = 12)
+const totalLevels = 50;
+
 const sounds = {};
 const last_free_level = 25;
 
@@ -204,64 +208,65 @@ function unlockPremiumLevelWithAds(level_id) {
         });
 }
 
-
-// === Отрисовка сетки уровней ===
-async function renderLevels() {
+function renderLevels() {
     const grid = document.getElementById('levels-grid');
+    if (!grid) return;
+    grid.innerHTML = ''; // Очищаем сетку
 
-    // Вместо loadLevelsList() берем массив из levels.js
-    const levels = window.GAME_LEVELS || [];
+    // Высчитываем индексы уровней для текущей страницы
+    const startIndex = currentPage * levelsPerPage;
+    const endIndex = Math.min(startIndex + levelsPerPage, totalLevels);
 
-    if (levels.length === 0) {
-        grid.innerHTML = '<div class="loading">Уровни не найдены (проверьте levels.js)</div>';
-        return;
-    }
+    // Допустим, ваши уровни лежат в массиве window.GAME_LEVELS
+    const allLevels = window.GAME_LEVELS || [];
 
-    grid.innerHTML = '';
+    for (let i = startIndex; i < endIndex; i++) {
+        const levelNum = i + 1;
 
-    levels.forEach(level => {
-        const btn = document.createElement('div');
-        const state = get_level_state(level.id);
+        const state = get_level_state(levelNum);
 
         btn.className = `level-btn ${state}`;
 
         if (state === 'locked') {
             btn.innerHTML = `<div class="lock-icon">🔒</div>`;
         }  else {
-            btn.innerHTML = `<div class="level-number">${level.id}</div>`;
+            btn.innerHTML = `<div class="level-number">${levelNum}</div>`;
         }
 
         // Клик по уровню
         btn.addEventListener('click', () => {
             if (state === 'locked') {
-                showLockedLevelToast(level2level[level.id]);
+                showLockedLevelToast(level2level[levelNum]);
                 return;
             }
 
             if (state === 'premium') {
                 // Если уровень платный — предлагаем посмотреть видео
-                unlockPremiumLevelWithAds(level.id);
+                unlockPremiumLevelWithAds(levelNum);
                 return;
             }
 
             // Доступный или пройденный → запускаем игру
-            launchLevel(level.id);
+            launchLevel(levelNum);
         });
 
         grid.appendChild(btn);
-    });
-
-    rnd_button = document.getElementById('random-btn');
-    rnd_button.onclick = () => {
-        playRandomWithAds();
     }
 
-    cup = document.getElementById('cup');
-    cup.onclick = () => {
-        showVKLeaderboardWindow();
-    }
-
+    // Обновляем состояние стрелочек и надписи страницы
+    updatePaginationControls();
     updateStats(completed_levels.length, levels.length);
+}
+
+function updatePaginationControls() {
+    const totalPages = Math.ceil(totalLevels / levelsPerPage);
+
+    // Текст индикатора
+    document.getElementById('page-indicator').innerText = `Страница ${currentPage + 1} / ${totalPages}`;
+
+    // Блокируем левую стрелку на первой странице, правую — на последней
+    document.getElementById('prev-page-btn').disabled = (currentPage === 0);
+    document.getElementById('next-page-btn').disabled = (currentPage === totalPages - 1);
 }
 
 // === Обновление статистики ===
@@ -1014,5 +1019,32 @@ async function Start() {
 
 
 // === Запуск ===
-document.addEventListener('DOMContentLoaded', Start);
+document.addEventListener('DOMContentLoaded', () => {
+    const prevBtn = document.getElementById('prev-page-btn');
+    const nextBtn = document.getElementById('next-page-btn');
+
+    if (prevBtn && nextBtn) {
+        prevBtn.onclick = () => {
+            if (currentPage > 0) {
+                currentPage--;
+                renderLevels();
+            }
+        };
+        nextBtn.onclick = () => {
+            const totalPages = Math.ceil(totalLevels / levelsPerPage);
+            if (currentPage < totalPages - 1) {
+                currentPage++;
+                renderLevels();
+            }
+        };
+    }
+
+    cup = document.getElementById('cup');
+    cup.onclick = () => {
+        showVKLeaderboardWindow();
+    }
+
+    await Start();
+});
+
 window.addEventListener('contextmenu', event => event.preventDefault());
