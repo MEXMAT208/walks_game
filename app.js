@@ -262,9 +262,6 @@ function renderLevels() {
 function updatePaginationControls() {
     const totalPages = Math.ceil(totalLevels / levelsPerPage);
 
-    // Текст индикатора
-    document.getElementById('page-indicator').innerText = `Страница ${currentPage + 1} / ${totalPages}`;
-
     // Блокируем левую стрелку на первой странице, правую — на последней
     document.getElementById('prev-page-btn').disabled = (currentPage === 0);
     document.getElementById('next-page-btn').disabled = (currentPage === totalPages - 1);
