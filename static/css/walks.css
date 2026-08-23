@@ -37,8 +37,7 @@ body {
 /* Верхняя панель — на всю ширину */
 .top-panel {
     width: 100%;
-    height: 10%;
-    padding: 0px 0px;
+    padding: 15px 25px;
     box-sizing: border-box;
 
     display: flex;
