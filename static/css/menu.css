@@ -354,9 +354,9 @@ body {
         font-size: 36px;
     }
     .levels-grid {
-        grid-template-columns: repeat(3, 90px) !important;
+        grid-template-columns: repeat(3, 80px) !important;
     /* 3 ряда ровно по 80px */
-        grid-template-rows: repeat(5, 80px) !important;
+        grid-template-rows: repeat(5, 70px) !important;
         gap: 8px; /* Уменьшили с 10px, чтобы освободить 6px места */
         padding-left: 0;  /* Сбрасываем лишние отступы, */
         padding-right: 0; /* если они были у самой сетки */
