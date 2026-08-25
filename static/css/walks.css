@@ -771,20 +771,22 @@ body {
 
 /* Адаптивность */
 @media (max-width: 600px) {
-    .premium-modal-content {
-        padding: 25px;
+    .modal-content {
+        padding: 25px 20px; /* Уменьшаем внутренние отступы окна (было 40px) */
     }
 
-    .premium-title {
-        font-size: 24px;
+    .modal-content h2 {
+        font-size: 22px; /* Уменьшаем заголовок (было 32px) */
+        margin-bottom: 8px;
     }
 
-    .new-price {
-        font-size: 28px;
+    .modal-content p {
+        font-size: 15px; /* Уменьшаем описание (было 18px) */
+        margin-bottom: 20px; /* Немного прижимаем кнопки к тексту */
     }
 
-    .feature-item {
-        font-size: 14px;
+    .modal-buttons {
+        gap: 10px; /* Делаем расстояние между кнопками чуть компактнее */
     }
 }
 

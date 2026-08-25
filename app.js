@@ -1,5 +1,3 @@
-import confetti from 'https://jsdelivr.net';
-
 let lockedToastTimer = null;
 let completed_levels = [];
 let lastAdShowTime = 0;
