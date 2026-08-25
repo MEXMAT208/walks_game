@@ -1,3 +1,5 @@
+import confetti from 'https://jsdelivr.net';
+
 let lockedToastTimer = null;
 let completed_levels = [];
 let lastAdShowTime = 0;
@@ -663,7 +665,7 @@ async function show_win_modal() {
     const modal = document.getElementById('win-modal');
     const messageEl = document.getElementById('win-message');
 
-    //levelCompleteFireworks()
+    levelCompleteFireworks()
 
     let first_time;
 
