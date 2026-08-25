@@ -666,7 +666,7 @@ function show_trap_modal() {
 
     var modalContent = modal.querySelector('.trap-content')
 
-    modalСontent.classList.add('modal-fire');
+    modalContent.classList.add('modal-fire');
 
     // Привязываем обработчики кнопок
     document.getElementById('btn-trap-retry').onclick = replay_level;

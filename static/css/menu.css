@@ -11,9 +11,52 @@ canvas, body {
 }
 
 html {
-    /* background: radial-gradient(ellipse at center, #3d2817 0%, #1a0f08 100%); */
     background: #2c3e50;
     min-height: 100%;
+}
+
+body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    max-height: 100dvh;
+    overflow: hidden;
+    overscroll-behavior: none;
+    font-family: 'Georgia', serif;
+    color: #fff;
+    padding: 0 20px 20px 20px;
+    box-sizing: border-box;
+
+    /* НАСТРОЙКА АНИМИРОВАННОГО ФОНА С БЛИКОМ */
+    /* Создаем градиент: Основной цвет -> Светлый Блик -> Основной цвет */
+    background: linear-gradient(
+        135deg,
+        #1e2b37 0%,
+        #2c3e50 40%,
+        #3d566e 50%, /* Это наш мягкий блик */
+        #2c3e50 60%,
+        #1a252f 100%
+    );
+
+    /* Растягиваем фон в 4 раза, чтобы анимации было где двигаться */
+    background-size: 400% 400%;
+
+    /* Запускаем бесконечную анимацию на 12 секунд */
+    animation: gradientGlow 12s ease infinite;
+}
+
+/* АНИМАЦИЯ ПЕРЕЛИВАНИЯ */
+/* Передвигаем фоновое изображение из угла в угол, создавая эффект движения света */
+@keyframes gradientGlow {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
 }
 
 html, body {
@@ -39,25 +82,6 @@ button,
 * {
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-}
-
-body {
-    /* ИСПРАВЛЕНО ДЛЯ VK: Жестко фиксируем размеры под фрейм */
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    max-height: 100dvh;
-    overflow: hidden;
-    overscroll-behavior: none;
-
-    font-family: 'Georgia', serif;
-    background: #2c3e50;
-    color: #fff;
-
-    /* ИСПРАВЛЕНО: Убираем отступ сверху, оставляем только по бокам и снизу */
-    padding: 0 20px 20px 20px;
-    background-attachment: fixed;
     box-sizing: border-box;
 }
 
