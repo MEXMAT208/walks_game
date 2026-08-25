@@ -88,6 +88,23 @@ const translations = {
     }
 };
 
+function levelCompleteFireworks() {
+    // Залп слева
+    confetti({
+        particleCount: 100,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0, y: 0.8 } // Левый нижний угол
+    });
+
+    // Залп справа
+    confetti({
+        particleCount: 100,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1, y: 0.8 } // Правый нижний угол
+    });
+}
 
 function showLockedLevelToast(requiredLevel) {
     const toast = document.getElementById('lockedToast');
@@ -645,6 +662,8 @@ function show_trap_modal() {
 async function show_win_modal() {
     const modal = document.getElementById('win-modal');
     const messageEl = document.getElementById('win-message');
+
+    levelCompleteFireworks()
 
     let first_time;
 

@@ -549,6 +549,11 @@ body {
     text-align: center;
     box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
     animation: modalAppear 0.5s ease;
+
+    /* Добавьте эти строки для адаптивности: */
+    width: 90%;          /* На маленьких экранах займет 90% ширины */
+    max-width: 500px;    /* На больших экранах не станет шире 500px */
+    box-sizing: border-box; /* Чтобы отступы 40px не раздували ширину */
 }
 
 @keyframes modalAppear {
