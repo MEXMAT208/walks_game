@@ -1,4 +1,4 @@
-// canvas-confetti v1.6.0 (Formatted version)
+// canvas-confetti v1.6.0 (Fixed & Formatted version)
 (function (global, factory) {
     if (typeof module === 'object' && module.exports) {
         module.exports = factory();
@@ -33,12 +33,6 @@
         return opt[key] !== undefined ? opt[key] : defaults[key];
     }
 
-    function convertColors(colors) {
-        return colors.map(function (color) {
-            return color;
-        });
-    }
-
     function drawSquare(ctx, x, y, width, height, tilt, color) {
         ctx.save();
         ctx.translate(x, y);
@@ -68,7 +62,7 @@
             y: options.y,
             velocity: options.startVelocity * randomRange(0.5, 1),
             angle: angle + randomRange(-spread / 2, spread / 2),
-            gravity: options.gravity * 3,
+            gravity: options.gravity * 0.4, // Немного уменьшили для более плавного падения
             wobble: Math.random() * 10,
             wobbleSpeed: Math.min(0.11, randomRange(0.05, 0.1) + options.scalar * 0.01),
             tilt: Math.random() * 2 * Math.PI,
@@ -109,8 +103,8 @@
         var ctx = canvas.getContext('2d');
 
         function update() {
-            var width = canvas.width = window.innerWidth;
-            var height = canvas.height = window.innerHeight;
+            var width = canvas.width;
+            var height = canvas.height;
 
             ctx.clearRect(0, 0, width, height);
 
@@ -134,13 +128,17 @@
         var opt = options || {};
         var canvas = document.createElement('canvas');
 
+        // Устанавливаем физический размер холста сразу по размеру экрана
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
         canvas.style.position = 'fixed';
         canvas.style.pointerEvents = 'none';
         canvas.style.top = '0px';
         canvas.style.left = '0px';
         canvas.style.width = '100%';
         canvas.style.height = '100%';
-        canvas.style.zIndex = '99999'; // Поверх модального окна
+        canvas.style.zIndex = '99999';
 
         document.body.appendChild(canvas);
 
@@ -162,7 +160,8 @@
 
         for (var i = 0; i < particleCount; i++) {
             var color = colors[Math.floor(Math.random() * colors.length)];
-            var shape = shapes[Math.floor(Math.random() * shapes.shapes || shapes.length)];
+            // ИСПРАВЛЕНО: корректный выбор случайной формы без shapes.shapes
+            var shape = shapes[Math.floor(Math.random() * shapes.length)];
 
             particles.push(createParticle({
                 angle: angle,
