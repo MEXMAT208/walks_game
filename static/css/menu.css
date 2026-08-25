@@ -11,8 +11,20 @@ canvas, body {
 }
 
 html {
-    background: #2c3e50;
-    min-height: 100%;
+    /* ПЕРЕНЕСЛИ АНИМАЦИЮ СЮДА */
+    /* Теперь фон гарантированно занимает 100% площади окна браузера */
+    background: linear-gradient(
+        135deg,
+        #1e2b37 0%,
+        #2c3e50 40%,
+        #3d566e 50%,
+        #2c3e50 60%,
+        #1a252f 100%
+    );
+    background-size: 400% 400%;
+    animation: gradientGlow 12s ease infinite;
+
+    height: 100%;
 }
 
 body {
@@ -24,25 +36,13 @@ body {
     overscroll-behavior: none;
     font-family: 'Georgia', serif;
     color: #fff;
+
+    /* Оставляем отступы для контента */
     padding: 0 20px 20px 20px;
     box-sizing: border-box;
 
-    /* НАСТРОЙКА АНИМИРОВАННОГО ФОНА С БЛИКОМ */
-    /* Создаем градиент: Основной цвет -> Светлый Блик -> Основной цвет */
-    background: linear-gradient(
-        135deg,
-        #1e2b37 0%,
-        #2c3e50 40%,
-        #3d566e 50%, /* Это наш мягкий блик */
-        #2c3e50 60%,
-        #1a252f 100%
-    );
-
-    /* Растягиваем фон в 4 раза, чтобы анимации было где двигаться */
-    background-size: 400% 400%;
-
-    /* Запускаем бесконечную анимацию на 12 секунд */
-    animation: gradientGlow 12s ease infinite;
+    /* Удаляем фон отсюда, чтобы он не дублировался и не перекрывал html */
+    background: transparent;
 }
 
 /* АНИМАЦИЯ ПЕРЕЛИВАНИЯ */

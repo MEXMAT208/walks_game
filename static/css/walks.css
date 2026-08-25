@@ -491,7 +491,6 @@
 }
 
 
-
 /* Модальное окно */
 .modal {
     position: fixed;
@@ -568,21 +567,21 @@
     justify-content: center;
 }
 
-@keyframes clockAnimate {
-    0% { transform: rotate(0deg) scale(1); }
-    20% { transform: rotate(-15deg) scale(1.1); }
-    40% { transform: rotate(15deg) scale(1.1); }
-    60% { transform: rotate(-10deg) scale(1.1); }
-    80% { transform: rotate(10deg) scale(1.1); }
-    100% { transform: rotate(0deg) scale(1); }
+.shake-clock {
+    display: inline-block;
+    /* Запускаем анимацию: длительность 0.5s, бесконечно */
+    animation: clockWobble 0.5s infinite ease-in-out;
+    /* Устанавливаем точку вращения снизу часов, чтобы они качались как маятник */
+    transform-origin: bottom center;
 }
 
-/* Контейнер для иконки часов */
-.modal-clock-icon {
-    font-size: 50px; /* Размер эмодзи-часов */
-    margin-bottom: 15px;
-    display: block;
-    animation: clockAnimate 0.8s ease-in-out; /* Сработает один раз при появлении */
+/* Эффект цикличного покачивания */
+@keyframes clockWobble {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(-12deg); }
+    50% { transform: rotate(0deg); }
+    75% { transform: rotate(12deg); }
+    100% { transform: rotate(0deg); }
 }
 
 /* === Общие стили для всех кнопок === */

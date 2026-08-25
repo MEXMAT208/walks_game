@@ -56,7 +56,7 @@ const translations = {
         win_desr: "Отличная работа!",
         trap: "💀 Вы попали в ловушку!",
         trap_descr: "Попробуйте обойти опасное место",
-        lose: "⏳ Ходы закончились!",
+        lose: "Ходы закончились!",
         lose_descr: "Попробуйте ещё раз",
         to_menu: "🏠 В меню",
         retry: "🔄 Попробовать снова",
@@ -75,7 +75,7 @@ const translations = {
         win_desr: "Great job!",
         trap: "💀 You're trapped",
         trap_descr: "Try to avoid a dangerous place",
-        lose: "⏳ The moves are over!",
+        lose: "The moves are over!",
         lose_descr: "Try again",
         to_menu: "🏠 To menu",
         retry: "🔄 Try again",
@@ -644,16 +644,6 @@ function hide_trap_modal() {
 function show_lose_modal() {
     const modal = document.getElementById('lose-modal');
     modal.style.display = 'flex';
-
-    if (!modal.querySelector('.modal-clock-icon')) {
-        // Создаем элемент для часов (используем стандартный эмодзи ⏳ или ⏰)
-        var clockElement = document.createElement('div');
-        clockElement.className = 'modal-clock-icon';
-        clockElement.innerText = '⏰';
-
-        // Вставляем часы в самое начало модального окна (перед заголовком H2)
-        modalContent.insertBefore(clockElement, modal.firstChild);
-    }
 
     // Привязываем обработчики кнопок
     document.getElementById('btn-lose-retry').onclick = replay_level;
