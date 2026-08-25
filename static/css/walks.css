@@ -567,27 +567,30 @@
     justify-content: center;
 }
 
+.lose-content h2 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Расстояние между часами и текстом */
+}
+
+/* Стили для тряски остаются прежними */
 .shake-clock {
     display: inline-block;
-    font-size: 28px; /* Делаем символ крупнее основного текста заголовка */
-    margin-right: 8px; /* Отступ от текста заголовка */
-    vertical-align: middle; /* Выравниваем ровно по центру строки */
-
-    /* Заставляем использовать стандартные системные символы */
+    font-size: 28px;
     font-family: "Segoe UI Symbol", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
-
-    /* Запускаем анимацию резкого будильника */
     animation: clockAlarm 0.4s infinite linear;
 }
 
-/* Эффект цикличного покачивания */
-@keyframes clockWobble {
-    0% { transform: rotate(0deg); }
-    25% { transform: rotate(-12deg); }
-    50% { transform: rotate(0deg); }
-    75% { transform: rotate(12deg); }
-    100% { transform: rotate(0deg); }
+@keyframes clockAlarm {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    20% { transform: translate(-2px, 1px) rotate(-5deg); }
+    40% { transform: translate(1px, -1px) rotate(5deg); }
+    60% { transform: translate(-1px, -1px) rotate(-3deg); }
+    80% { transform: translate(2px, 1px) rotate(3deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
 }
+
 
 /* === Общие стили для всех кнопок === */
 .btn {

@@ -104,7 +104,12 @@
         <div id="lose-modal" class="modal" style="display: none;">
             <div class="modal-content lose-content">
                 <!-- Заменили эмодзи на Unicode-символ через текстовый код -->
-                <h2 data-lang-key="lose"><span class="shake-clock">&#x23F3;</span> Ходы закончились!</h2>
+                <h2>
+                    <span class="shake-clock">&#x23F3;</span>
+
+                    <span data-lang-key="lose">Ходы закончились!</span>
+
+                </h2>
                 <p data-lang-key="lose_descr"> Попробуйте ещё раз</p>
                 <div class="modal-buttons">
                     <button id="btn-lose-retry" class="btn btn-retry" data-lang-key="retry">🔄 Попробовать снова</button>
