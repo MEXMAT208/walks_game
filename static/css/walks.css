@@ -484,7 +484,7 @@ body {
 
 /* Эффект при наведении мыши */
 .hero-piece:hover {
-    transform: scale(1.05);
+    transform: scale(1.07);
 }
 
 .hero-piece.finished {
@@ -523,7 +523,7 @@ body {
 
 @keyframes float {
     from { transform: translateY(0); }
-    to { transform: translateY(-5px); }
+    to { transform: translateY(-7px); }
 }
 
 

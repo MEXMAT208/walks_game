@@ -1069,7 +1069,3 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 window.addEventListener('contextmenu', event => event.preventDefault());
-
-document.addEventListener('click', function() {
-    confetti({ particleCount: 50 });
-});
