@@ -573,15 +573,15 @@ body {
     }
     50% {
         box-shadow: 0 0 40px #ff1744, 0 0 70px #ff3d00, 0 10px 50px rgba(0, 0, 0, 0.5);
-        transform: scale(1.02); /* Окно слегка пульсирует от жара */
+        transform: scale(1.02); /* Окошко слегка пульсирует от жара */
     }
     100% {
         box-shadow: 0 0 20px #ff3d00, 0 0 40px #ff9100, 0 10px 50px rgba(0, 0, 0, 0.3);
     }
 }
 
-/* Класс, который активирует огонь */
-.modal-fire {
+/* Класс огня, который применяется ИМЕННО к белому блоку */
+.trap-content.modal-fire {
     border: 3px solid #ff3d00 !important;
     animation: modalAppear 0.5s ease, fireGlow 1.5s infinite ease-in-out !important;
 }

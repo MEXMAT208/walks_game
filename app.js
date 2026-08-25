@@ -664,7 +664,9 @@ function show_trap_modal() {
     const modal = document.getElementById('trap-modal');
     modal.style.display = 'flex';
 
-    modal.classList.add('modal-fire');
+    var modalContent = modal.querySelector('.trap-content')
+
+    modalСontent.classList.add('modal-fire');
 
     // Привязываем обработчики кнопок
     document.getElementById('btn-trap-retry').onclick = replay_level;
