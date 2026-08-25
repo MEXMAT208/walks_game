@@ -1,2 +1,187 @@
-// canvas-confetti v1.6.0
-!function(t,e){!function t(e,n,r,o){var i=!!(e.addons||e.once||e.none),a=e.navigator||{},s=a.userAgent||"",c=t.Canvas||n.Canvas||r.Canvas||o.Canvas,l=function(t,e){return t?t[e]:void 0},u=function(t){var e=l(t,"CustomEvent");if(e)return e;try{return new CustomEvent("test")}catch(t){return function(t,e){var n=document.createEvent("CustomEvent");return e=e||{},n.initCustomEvent(t,!!e.bubbles,!!e.cancelable,e.detail),n}}},f=function(){return"undefined"!=typeof window&&l(window,"requestAnimationFrame")||function(t){setTimeout(t,16)}};function d(t,e){var n=this,r=l(t,"custom")||{};n.isWorker=!!l(t,"isWorker"),n.useWorker=l(t,"useWorker"),n.worker=null,n.add=function(t){r[t]=!0},n.has=function(t){return!!r[t]},n.fire=function(t,e){var o=u(t);n.isWorker?postMessage({type:t,detail:e}):document.dispatchEvent(new o(t,{detail:e}))}}var p=function(){var t,e,n=0,r=0,o=0,i=1,a=1,s=0,c=0,l=0,u=0,f=0,d=0,p=0,v=0,h=0,m=0,g=0,y=0,w=0,x=0,b=0,T=0,E=0,I=0,C=0,O=0,A=0,N=0,k=0,S=0,P=0,R=0,M=0,D=0,F=0,L=0,H=0,z=0,B=0,U=0,W=0,V=0,q=0,F_F=0;return function(t){return t}}();!function(e){var n=Math.PI,r=2*n,o=function(t,e){return t+(e-t)*Math.random()},i=function(t){return t.theme||(t.theme="light"),t},a=function(t){return i(t)},s=function(t){return a(t)};function c(t,e){return{x:t.x+e.x,y:t.y+e.y}}function l(t,e){return{x:t.x-e.x,y:t.y-e.y}}function u(t,e){return{x:t.x*e,y:t.y*e}}function f(t){return Math.sqrt(t.x*t.x+t.y*t.y)}function d(t){var e=f(t);return 0===e?{x:0,y:0}:{x:t.x/e,y:t.y/e}}function p(t,e){return t.x*e.x+t.y*e.y}function v(t,e){return t.x*e.y-t.y*e.x}function h(t){return{x:-t.y,y:t.x}}var m=function(){function t(t,e){this.x=t,this.y=e}return t.prototype.add=function(e){return new t(this.x+e.x,this.y+e.y)},t.prototype.sub=function(e){return new t(this.x-e.x,this.y-e.y)},t.prototype.mult=function(e){return new t(this.x*e,this.y*e)},t.prototype.div=function(e){return new t(this.x/e,this.y/e)},t.prototype.mag=function(){return Math.sqrt(this.x*this.x+this.y*this.y)},t.prototype.normalize=function(){var e=this.mag();return 0===e?new t(0,0):this.div(e)},t.prototype.dot=function(t){return this.x*t.x+this.y*t.y},t.prototype.cross=function(t){return this.x*t.y-this.y*t.x},t.prototype.perp=function(){return new t(-this.y,this.x)},t}();function g(t){var e=t.getContext("2d");if(!e)throw new Error("Could not get canvas context");return e}function y(t,e){t.width=e.width,t.height=e.height}function w(t){return{width:t.clientWidth,height:t.clientHeight}}function x(t,e,n,r){t.save(),t.translate(e,n),t.rotate(r)}function b(t){t.restore()}function T(t,e,n,r,o,i,a,s){x(t,e,n,a),t.fillStyle=s,t.fillRect(-r/2,-o/2,r,o),b(t)}function E(t,e,n,r,o,i,a,s){x(t,e,n,a),t.fillStyle=s,t.beginPath(),t.ellipse(0,0,r/2,o/2,0,0,r),t.fill(),b(t)}function I(t,e,n,r,o,i,a,s){x(t,e,n,a),t.fillStyle=s,t.beginPath(),t.moveTo(0,-o/2),t.lineTo(r/2,o/2),t.lineTo(-r/2,o/2),t.closePath(),t.fill(),b(t)}function C(t,e,n,r,o,i,a,s){x(t,e,n,a),t.fillStyle=s,t.beginPath();for(var c=0;c<5;c++)t.lineTo(Math.cos((18+72*c)*n/180)*r/2,Math.sin((18+72*c)*n/180)*o/2),t.lineTo(Math.cos((54+72*c)*n/180)*(r/4),Math.sin((54+72*c)*n/180)*(o/4));t.closePath(),t.fill(),b(t)}var O={square:T,circle:E,triangle:I,star:C};function A(t){var e=t.angle*(Math.PI/180),n=t.spread*(Math.PI/180);return{x:t.x,y:t.y,velocity:t.startVelocity*o(.5,1),angle:e+o(-n/2,n/2),gravity:t.gravity,wobble:2*Math.random()*Math.PI,wobbleSpeed:t.wobbleSpeed,wobbleX:o(.1,.9),wobbleY:o(.1,.9),tilt:2*Math.random()*Math.PI,tiltSpeed:t.tiltSpeed,color:t.color,shape:t.shape,tick:0,totalTicks:t.ticks,decay:t.decay,drift:t.drift,scale:t.scalar}}function N(t,e){e.x+=Math.cos(e.angle)*e.velocity+e.drift,e.y+=Math.sin(e.angle)*e.velocity+e.gravity,e.velocity*=e.decay,e.wobble+=e.wobbleSpeed,e.tilt+=e.tiltSpeed,e.tick++;var n=e.tick/e.totalTicks,r=e.color,o=e.x*t.width,i=e.y*t.height,a=Math.abs(Math.cos(e.wobble))*e.scale*10,s=Math.abs(Math.sin(e.wobble))*e.scale*10,c=e.tilt,l=O[e.shape];return l(t.context,o,i,a,s,n,c,r),e.tick<e.totalTicks}function k(t,e,n){var r,o=e.length,i=n.length,a=function(){r||(r=f(),y(r,w(t)),n.forEach((function(e){var n=A({angle:e.angle,spread:e.spread,startVelocity:e.startVelocity,gravity:e.gravity,ticks:e.ticks,decay:e.decay,drift:e.drift,scalar:e.scalar,wobbleSpeed:e.wobbleSpeed,tiltSpeed:e.tiltSpeed,x:e.x,y:e.y,color:e.colors[Math.floor(Math.random()*e.colors.length)],shape:e.shapes[Math.floor(Math.random()*e.shapes.length)]});e.particles.push(n)})))};function s(){r&&(r.context.clearRect(0,0,r.width,r.height),n.forEach((function(t){t.particles=t.particles.filter((function(e){return N(r,e)}))})),n.some((function(t){return t.particles.length>0}))?f()(s):(e.forEach((function(t){t.worker&&t.worker.terminate()})),r.canvas.parentNode&&r.canvas.parentNode.removeChild(r.canvas),r=null))}return a(),s(),{add:function(t){n.push(t),a()}}}function S(t){var e=t.canvas;return{context:g(e),canvas:e,width:e.width,height:e.height}}function P(t){var e,n,r=t.Canvas||window.HTMLCanvasElement;function o(t){var o=n||(e=new r,y(e,w(t)),t.appendChild(e),n=S({canvas:e}));return n}return{get:o,clear:function(){e&&e.parentNode&&e.parentNode.removeChild(e),e=null,n=null}}}var R=P(e),M=function(t){return R.get(t)},D=function(){R.clear()};function F(t){var e=t||{},n=l(e,"canvas")||M(l(e,"container")||document.body),r=[],o=function(t){var e=l(t,"particleCount")||50,n=l(t,"angle")||90,o=l(t,"spread")||45,i=l(t,"startVelocity")||45,a=l(t,"decay")||.9,s=l(t,"gravity")||1,c=l(t,"drift")||0,u=l(t,"ticks")||200,f=l(t,"x")||.5,d=l(t,"y")||.5,p=l(t,"shapes")||["square","circle"],v=l(t,"colors")||["#26ccff","#a25afd","#ff5e7e","#88ff5a","#fcff42","#ffd21f","#abcdef"],h=l(t,"scalar")||1,m=l(t,"wobbleSpeed")||.1,g=l(t,"tiltSpeed")||.1;return{particleCount:e,angle:n,spread:o,startVelocity:i,decay:a,gravity:s,drift:c,ticks:u,x:f,y:d,shapes:p,colors:v,scalar:h,wobbleSpeed:m,tiltSpeed:g,particles:[]}};return function(t){var e=o(t);r.push(e),k(n.canvas,[n],r)}}t.Confetti=F,t.confetti=F(),t.clearConfetti=D}(d.prototype),t.confetti=d.confetti,t.clearConfetti=d.clearConfetti,t.Confetti=d.Confetti,"undefined"!=typeof module&&module.exports&&(module.exports=d.confetti)}(0,this);
+// canvas-confetti v1.6.0 (Formatted version)
+(function (global, factory) {
+    if (typeof module === 'object' && module.exports) {
+        module.exports = factory();
+    } else {
+        global.confetti = factory();
+    }
+})(this, function () {
+    var isWorker = typeof window === 'undefined';
+    var raf = (!isWorker && window.requestAnimationFrame) || function (cb) { setTimeout(cb, 16); };
+
+    var defaults = {
+        particleCount: 50,
+        angle: 90,
+        spread: 45,
+        startVelocity: 45,
+        decay: 0.9,
+        gravity: 1,
+        drift: 0,
+        ticks: 200,
+        x: 0.5,
+        y: 0.5,
+        shapes: ['square', 'circle'],
+        colors: ['#26ccff', '#a25afd', '#ff5e7e', '#88ff5a', '#fcff42', '#ffd21f', '#abcdef'],
+        scalar: 1
+    };
+
+    function randomRange(min, max) {
+        return min + (max - min) * Math.random();
+    }
+
+    function getOption(opt, key) {
+        return opt[key] !== undefined ? opt[key] : defaults[key];
+    }
+
+    function convertColors(colors) {
+        return colors.map(function (color) {
+            return color;
+        });
+    }
+
+    function drawSquare(ctx, x, y, width, height, tilt, color) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(tilt);
+        ctx.fillStyle = color;
+        ctx.fillRect(-width / 2, -height / 2, width, height);
+        ctx.restore();
+    }
+
+    function drawCircle(ctx, x, y, width, height, tilt, color) {
+        ctx.save();
+        ctx.translate(x, y);
+        ctx.rotate(tilt);
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.ellipse(0, 0, width / 2, height / 2, 0, 0, 2 * Math.PI);
+        ctx.fill();
+        ctx.restore();
+    }
+
+    function createParticle(options) {
+        var angle = options.angle * (Math.PI / 180);
+        var spread = options.spread * (Math.PI / 180);
+
+        return {
+            x: options.x,
+            y: options.y,
+            velocity: options.startVelocity * randomRange(0.5, 1),
+            angle: angle + randomRange(-spread / 2, spread / 2),
+            gravity: options.gravity * 3,
+            wobble: Math.random() * 10,
+            wobbleSpeed: Math.min(0.11, randomRange(0.05, 0.1) + options.scalar * 0.01),
+            tilt: Math.random() * 2 * Math.PI,
+            tiltSpeed: randomRange(0.1, 0.2) + options.scalar * 0.02,
+            color: options.color,
+            shape: options.shape,
+            tick: 0,
+            totalTicks: options.ticks,
+            decay: options.decay,
+            drift: options.drift,
+            scale: options.scalar
+        };
+    }
+
+    function updateParticle(ctx, size, particle) {
+        particle.x += Math.cos(particle.angle) * particle.velocity + particle.drift;
+        particle.y += Math.sin(particle.angle) * particle.velocity + particle.gravity;
+        particle.velocity *= particle.decay;
+        particle.wobble += particle.wobbleSpeed;
+        particle.tilt += particle.tiltSpeed;
+        particle.tick++;
+
+        var x = particle.x * size.width;
+        var y = particle.y * size.height;
+        var width = particle.scale * 10 * Math.abs(Math.cos(particle.wobble));
+        var height = particle.scale * 10 * Math.abs(Math.sin(particle.wobble));
+
+        if (particle.shape === 'circle') {
+            drawCircle(ctx, x, y, width, height, particle.tilt, particle.color);
+        } else {
+            drawSquare(ctx, x, y, width, height, particle.tilt, particle.color);
+        }
+
+        return particle.tick < particle.totalTicks;
+    }
+
+    function mainAnimation(canvas, particles) {
+        var ctx = canvas.getContext('2d');
+
+        function update() {
+            var width = canvas.width = window.innerWidth;
+            var height = canvas.height = window.innerHeight;
+
+            ctx.clearRect(0, 0, width, height);
+
+            particles = particles.filter(function (p) {
+                return updateParticle(ctx, { width: width, height: height }, p);
+            });
+
+            if (particles.length > 0) {
+                raf(update);
+            } else {
+                if (canvas.parentNode) {
+                    canvas.parentNode.removeChild(canvas);
+                }
+            }
+        }
+
+        raf(update);
+    }
+
+    function fire(options) {
+        var opt = options || {};
+        var canvas = document.createElement('canvas');
+
+        canvas.style.position = 'fixed';
+        canvas.style.pointerEvents = 'none';
+        canvas.style.top = '0px';
+        canvas.style.left = '0px';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.zIndex = '2000'; // Поверх модального окна
+
+        document.body.appendChild(canvas);
+
+        var particleCount = getOption(opt, 'particleCount');
+        var angle = getOption(opt, 'angle');
+        var spread = getOption(opt, 'spread');
+        var startVelocity = getOption(opt, 'startVelocity');
+        var decay = getOption(opt, 'decay');
+        var gravity = getOption(opt, 'gravity');
+        var drift = getOption(opt, 'drift');
+        var ticks = getOption(opt, 'ticks');
+        var x = getOption(opt, 'x');
+        var y = getOption(opt, 'y');
+        var shapes = getOption(opt, 'shapes');
+        var colors = getOption(opt, 'colors');
+        var scalar = getOption(opt, 'scalar');
+
+        var particles = [];
+
+        for (var i = 0; i < particleCount; i++) {
+            var color = colors[Math.floor(Math.random() * colors.length)];
+            var shape = shapes[Math.floor(Math.random() * shapes.shapes || shapes.length)];
+
+            particles.push(createParticle({
+                angle: angle,
+                spread: spread,
+                startVelocity: startVelocity,
+                decay: decay,
+                gravity: gravity,
+                drift: drift,
+                ticks: ticks,
+                x: x,
+                y: y,
+                shape: shape,
+                color: color,
+                scalar: scalar
+            }));
+        }
+
+        mainAnimation(canvas, particles);
+    }
+
+    return fire;
+});
