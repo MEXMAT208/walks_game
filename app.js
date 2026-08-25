@@ -645,6 +645,16 @@ function show_lose_modal() {
     const modal = document.getElementById('lose-modal');
     modal.style.display = 'flex';
 
+    if (!modal.querySelector('.modal-clock-icon')) {
+        // Создаем элемент для часов (используем стандартный эмодзи ⏳ или ⏰)
+        var clockElement = document.createElement('div');
+        clockElement.className = 'modal-clock-icon';
+        clockElement.innerText = '⏰';
+
+        // Вставляем часы в самое начало модального окна (перед заголовком H2)
+        modalContent.insertBefore(clockElement, modal.firstChild);
+    }
+
     // Привязываем обработчики кнопок
     document.getElementById('btn-lose-retry').onclick = replay_level;
     document.getElementById('btn-lose-menu').onclick = switchToMenuScreen;
@@ -653,6 +663,8 @@ function show_lose_modal() {
 function show_trap_modal() {
     const modal = document.getElementById('trap-modal');
     modal.style.display = 'flex';
+
+    modal.classList.add('modal-fire');
 
     // Привязываем обработчики кнопок
     document.getElementById('btn-trap-retry').onclick = replay_level;

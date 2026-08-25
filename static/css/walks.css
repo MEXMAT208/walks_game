@@ -567,6 +567,25 @@ body {
     }
 }
 
+@keyframes fireGlow {
+    0% {
+        box-shadow: 0 0 20px #ff3d00, 0 0 40px #ff9100, 0 10px 50px rgba(0, 0, 0, 0.3);
+    }
+    50% {
+        box-shadow: 0 0 40px #ff1744, 0 0 70px #ff3d00, 0 10px 50px rgba(0, 0, 0, 0.5);
+        transform: scale(1.02); /* Окно слегка пульсирует от жара */
+    }
+    100% {
+        box-shadow: 0 0 20px #ff3d00, 0 0 40px #ff9100, 0 10px 50px rgba(0, 0, 0, 0.3);
+    }
+}
+
+/* Класс, который активирует огонь */
+.modal-fire {
+    border: 3px solid #ff3d00 !important;
+    animation: modalAppear 0.5s ease, fireGlow 1.5s infinite ease-in-out !important;
+}
+
 .modal-content h2 {
     margin: 0 0 10px 0;
     color: #2c3e50;
@@ -583,6 +602,23 @@ body {
     display: flex;
     gap: 15px;
     justify-content: center;
+}
+
+@keyframes clockAnimate {
+    0% { transform: rotate(0deg) scale(1); }
+    20% { transform: rotate(-15deg) scale(1.1); }
+    40% { transform: rotate(15deg) scale(1.1); }
+    60% { transform: rotate(-10deg) scale(1.1); }
+    80% { transform: rotate(10deg) scale(1.1); }
+    100% { transform: rotate(0deg) scale(1); }
+}
+
+/* Контейнер для иконки часов */
+.modal-clock-icon {
+    font-size: 50px; /* Размер эмодзи-часов */
+    margin-bottom: 15px;
+    display: block;
+    animation: clockAnimate 0.8s ease-in-out; /* Сработает один раз при появлении */
 }
 
 /* === Общие стили для всех кнопок === */
