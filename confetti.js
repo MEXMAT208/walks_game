@@ -1,119 +1,111 @@
-// canvas-confetti v1.6.0 (Fixed & Formatted version)
-(function (global, factory) {
-    if (typeof module === 'object' && module.exports) {
-        module.exports = factory();
-    } else {
-        global.confetti = factory();
-    }
-})(this, function () {
-    var isWorker = typeof window === 'undefined';
-    var raf = (!isWorker && window.requestAnimationFrame) || function (cb) { setTimeout(cb, 16); };
+// Простой и надежный скрипт салюта (confetti.js)
+(function (global) {
+    function fireConfetti(options) {
+        var opt = options || {};
+        var particleCount = opt.particleCount || 100;
+        var spread = opt.spread || 70;
+        var startVelocity = opt.startVelocity || 30;
 
-    var defaults = {
-        particleCount: 50,
-        angle: 90,
-        spread: 45,
-        startVelocity: 45,
-        decay: 0.9,
-        gravity: 1,
-        drift: 0,
-        ticks: 200,
-        x: 0.5,
-        y: 0.5,
-        shapes: ['square', 'circle'],
-        colors: ['#26ccff', '#a25afd', '#ff5e7e', '#88ff5a', '#fcff42', '#ffd21f', '#abcdef'],
-        scalar: 1
-    };
+        // Создаем холст
+        var canvas = document.createElement('canvas');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        canvas.style.position = 'fixed';
+        canvas.style.top = '0px';
+        canvas.style.left = '0px';
+        canvas.style.width = '100%';
+        canvas.style.height = '100%';
+        canvas.style.pointerEvents = 'none';
+        canvas.style.zIndex = '99999'; // Поверх всего
 
-    function randomRange(min, max) {
-        return min + (max - min) * Math.random();
-    }
-
-    function getOption(opt, key) {
-        return opt[key] !== undefined ? opt[key] : defaults[key];
-    }
-
-    function drawSquare(ctx, x, y, width, height, tilt, color) {
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(tilt);
-        ctx.fillStyle = color;
-        ctx.fillRect(-width / 2, -height / 2, width, height);
-        ctx.restore();
-    }
-
-    function drawCircle(ctx, x, y, width, height, tilt, color) {
-        ctx.save();
-        ctx.translate(x, y);
-        ctx.rotate(tilt);
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.ellipse(0, 0, width / 2, height / 2, 0, 0, 2 * Math.PI);
-        ctx.fill();
-        ctx.restore();
-    }
-
-    function createParticle(options) {
-        var angle = options.angle * (Math.PI / 180);
-        var spread = options.spread * (Math.PI / 180);
-
-        return {
-            x: options.x,
-            y: options.y,
-            velocity: options.startVelocity * randomRange(0.5, 1),
-            angle: angle + randomRange(-spread / 2, spread / 2),
-            gravity: options.gravity * 0.4, // Немного уменьшили для более плавного падения
-            wobble: Math.random() * 10,
-            wobbleSpeed: Math.min(0.11, randomRange(0.05, 0.1) + options.scalar * 0.01),
-            tilt: Math.random() * 2 * Math.PI,
-            tiltSpeed: randomRange(0.1, 0.2) + options.scalar * 0.02,
-            color: options.color,
-            shape: options.shape,
-            tick: 0,
-            totalTicks: options.ticks,
-            decay: options.decay,
-            drift: options.drift,
-            scale: options.scalar
-        };
-    }
-
-    function updateParticle(ctx, size, particle) {
-        particle.x += Math.cos(particle.angle) * particle.velocity + particle.drift;
-        particle.y += Math.sin(particle.angle) * particle.velocity + particle.gravity;
-        particle.velocity *= particle.decay;
-        particle.wobble += particle.wobbleSpeed;
-        particle.tilt += particle.tiltSpeed;
-        particle.tick++;
-
-        var x = particle.x * size.width;
-        var y = particle.y * size.height;
-        var width = particle.scale * 10 * Math.abs(Math.cos(particle.wobble));
-        var height = particle.scale * 10 * Math.abs(Math.sin(particle.wobble));
-
-        if (particle.shape === 'circle') {
-            drawCircle(ctx, x, y, width, height, particle.tilt, particle.color);
-        } else {
-            drawSquare(ctx, x, y, width, height, particle.tilt, particle.color);
-        }
-
-        return particle.tick < particle.totalTicks;
-    }
-
-    function mainAnimation(canvas, particles) {
+        document.body.appendChild(canvas);
         var ctx = canvas.getContext('2d');
 
+        var colors = opt.colors || ['#26ccff', '#a25afd', '#ff5e7e', '#88ff5a', '#fcff42', '#ffd21f', '#abcdef'];
+        var particles = [];
+
+        // Точка старта (по умолчанию снизу по центру экрана)
+        var startX = window.innerWidth * 0.5;
+        var startY = window.innerHeight * 0.75;
+
+        // Если переданы координаты origin (от 0 до 1)
+        if (opt.origin) {
+            if (opt.origin.x !== undefined) startX = window.innerWidth * opt.origin.x;
+            if (opt.origin.y !== undefined) startY = window.innerHeight * opt.origin.y;
+        }
+
+        // Создаем частицы
+        for (var i = 0; i < particleCount; i++) {
+            // Переводим угол разлета в радианы
+            var baseAngle = (opt.angle !== undefined ? opt.angle : 90) * Math.PI / 180;
+            var spreadAngle = (Math.random() - 0.5) * (spread * Math.PI / 180);
+            var finalAngle = baseAngle + spreadAngle;
+
+            var velocity = startVelocity * (0.6 + Math.random() * 0.8);
+
+            particles.push({
+                x: startX,
+                y: startY,
+                vx: Math.cos(finalAngle) * velocity,
+                vy: -Math.sin(finalAngle) * velocity, // Минус, так как ось Y идет вниз
+                size: randomRange(6, 12),
+                color: colors[Math.floor(Math.random() * colors.length)],
+                rotation: Math.random() * 360,
+                rotationSpeed: (Math.random() - 0.5) * 10,
+                opacity: 1,
+                wobble: Math.random() * 10,
+                wobbleSpeed: 0.05 + Math.random() * 0.05,
+                shape: Math.random() > 0.5 ? 'square' : 'circle'
+            });
+        }
+
+        function randomRange(min, max) {
+            return min + (max - min) * Math.random();
+        }
+
+        // Цикл анимации
         function update() {
-            var width = canvas.width;
-            var height = canvas.height;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            ctx.clearRect(0, 0, width, height);
+            // Обновляем и рисуем каждую частицу
+            particles.forEach(function (p) {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.vy += 0.4; // Сила гравитации (тянет вниз)
+                p.vx *= 0.98; // Сопротивление воздуха
+                p.vy *= 0.98;
+                p.rotation += p.rotationSpeed;
+                p.wobble += p.wobbleSpeed;
+                p.opacity -= 0.006; // Плавное исчезновение
 
-            particles = particles.filter(function (p) {
-                return updateParticle(ctx, { width: width, height: height }, p);
+                if (p.opacity <= 0) return;
+
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rotation * Math.PI / 180);
+                ctx.globalAlpha = p.opacity;
+                ctx.fillStyle = p.color;
+
+                var scaleX = Math.sin(p.wobble);
+
+                if (p.shape === 'square') {
+                    ctx.fillRect(-p.size * scaleX / 2, -p.size / 2, p.size * scaleX, p.size);
+                } else {
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, (p.size / 2) * Math.abs(scaleX), p.size / 2, 0, 0, 2 * Math.PI);
+                    ctx.fill();
+                }
+                ctx.restore();
             });
 
+            // Фильтруем только живые частицы
+            particles = particles.filter(function (p) {
+                return p.opacity > 0;
+            });
+
+            // Если частицы еще есть — продолжаем кадры
             if (particles.length > 0) {
-                raf(update);
+                requestAnimationFrame(update);
             } else {
                 if (canvas.parentNode) {
                     canvas.parentNode.removeChild(canvas);
@@ -121,66 +113,8 @@
             }
         }
 
-        raf(update);
+        requestAnimationFrame(update);
     }
 
-    function fire(options) {
-        var opt = options || {};
-        var canvas = document.createElement('canvas');
-
-        // Устанавливаем физический размер холста сразу по размеру экрана
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        canvas.style.position = 'fixed';
-        canvas.style.pointerEvents = 'none';
-        canvas.style.top = '0px';
-        canvas.style.left = '0px';
-        canvas.style.width = '100%';
-        canvas.style.height = '100%';
-        canvas.style.zIndex = '99999';
-
-        document.body.appendChild(canvas);
-
-        var particleCount = getOption(opt, 'particleCount');
-        var angle = getOption(opt, 'angle');
-        var spread = getOption(opt, 'spread');
-        var startVelocity = getOption(opt, 'startVelocity');
-        var decay = getOption(opt, 'decay');
-        var gravity = getOption(opt, 'gravity');
-        var drift = getOption(opt, 'drift');
-        var ticks = getOption(opt, 'ticks');
-        var x = getOption(opt, 'x');
-        var y = getOption(opt, 'y');
-        var shapes = getOption(opt, 'shapes');
-        var colors = getOption(opt, 'colors');
-        var scalar = getOption(opt, 'scalar');
-
-        var particles = [];
-
-        for (var i = 0; i < particleCount; i++) {
-            var color = colors[Math.floor(Math.random() * colors.length)];
-            // ИСПРАВЛЕНО: корректный выбор случайной формы без shapes.shapes
-            var shape = shapes[Math.floor(Math.random() * shapes.length)];
-
-            particles.push(createParticle({
-                angle: angle,
-                spread: spread,
-                startVelocity: startVelocity,
-                decay: decay,
-                gravity: gravity,
-                drift: drift,
-                ticks: ticks,
-                x: x,
-                y: y,
-                shape: shape,
-                color: color,
-                scalar: scalar
-            }));
-        }
-
-        mainAnimation(canvas, particles);
-    }
-
-    return fire;
-});
+    global.confetti = fireConfetti;
+})(this);
