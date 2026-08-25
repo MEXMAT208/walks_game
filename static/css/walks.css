@@ -569,10 +569,15 @@
 
 .shake-clock {
     display: inline-block;
-    /* Запускаем анимацию: длительность 0.5s, бесконечно */
-    animation: clockWobble 0.5s infinite ease-in-out;
-    /* Устанавливаем точку вращения снизу часов, чтобы они качались как маятник */
-    transform-origin: bottom center;
+    font-size: 28px; /* Делаем символ крупнее основного текста заголовка */
+    margin-right: 8px; /* Отступ от текста заголовка */
+    vertical-align: middle; /* Выравниваем ровно по центру строки */
+
+    /* Заставляем использовать стандартные системные символы */
+    font-family: "Segoe UI Symbol", "Apple Color Emoji", "Noto Color Emoji", sans-serif;
+
+    /* Запускаем анимацию резкого будильника */
+    animation: clockAlarm 0.4s infinite linear;
 }
 
 /* Эффект цикличного покачивания */
