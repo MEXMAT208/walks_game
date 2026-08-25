@@ -663,7 +663,7 @@ async function show_win_modal() {
     const modal = document.getElementById('win-modal');
     const messageEl = document.getElementById('win-message');
 
-    levelCompleteFireworks()
+    //levelCompleteFireworks()
 
     let first_time;
 
