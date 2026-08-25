@@ -140,7 +140,7 @@
         canvas.style.left = '0px';
         canvas.style.width = '100%';
         canvas.style.height = '100%';
-        canvas.style.zIndex = '2000'; // Поверх модального окна
+        canvas.style.zIndex = '99999'; // Поверх модального окна
 
         document.body.appendChild(canvas);
 
