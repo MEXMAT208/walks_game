@@ -153,56 +153,67 @@ function get_level_state(level_id) {
 function playRandomWithAds() {
     document.getElementById('loading-overlay').classList.remove('hidden');
 
+    let prepared_level_data = null;
+    let isAdSuccessfullyWatched = false; // Флаг: досмотрено ли видео
+
+    console.log('1. Запуск Rewarded видео VK и параллельной генерации...');
+
+    // ШАГ А: Запускаем генерацию уровня в фоне.
+    // Используем setTimeout(..., 0), чтобы тяжелые вычисления не заблокировали
+    // отправку запроса VK Bridge на открытие рекламного плеера.
     setTimeout(() => {
-        let isAdClosed = false;
-        let prepared_level_data = null;
-        console.log('Запуск Rewarded видео VK. Начинаем генерацию уровня в фоне...');
+        prepared_level_data = generate_level();
+        console.log('А. Уровень успешно сгенерирован в фоне и ждет окончания рекламы.');
 
-        // Запускаем генерацию ПАРАЛЛЕЛЬНО показу рекламы
-        setTimeout(() => {
-            prepared_level_data = generate_level();
-            console.log('Уровень успешно сгенерирован во время рекламы!');
-        }, 50);
+        // Если реклама ВДРУГ завершилась РАНЬШЕ, чем закончилась генерация
+        if (isAdSuccessfullyWatched) {
+            console.log('Реклама уже была просмотрена, запускаем игру сразу!');
+            startGameWithPreparedData();
+        }
+    }, 0);
 
-        // 2. Вызываем рекламу за вознаграждение в VK
-        vkBridge.send('VKWebAppShowNativeAds', { ad_format: 'reward' })
-            .then(data => {
-                isAdClosed = true;
+    // ШАГ Б: Вызываем рекламу за вознаграждение в VK
+    vkBridge.send('VKWebAppShowNativeAds', { ad_format: 'reward' })
+        .then(data => {
+            // Строгая проверка VK: видео досмотрено до конца
+            if (data && data.result === true) {
+                console.log('Б. Видео успешно досмотрено до конца!');
+                isAdSuccessfullyWatched = true;
 
-                if (data.result) {
-                    console.log('Видео успешно досмотрено до конца! Выдаем уровень...');
-
-                    // Проверяем, готова ли фоновая генерация уровня
-                    const checkAndDraw = () => {
-                        if (prepared_level_data) {
-                            document.getElementById('loading-overlay').classList.add('hidden')
-                            clear_level();
-                            switchToGameScreen('random', prepared_level_data);
-                        } else {
-                            console.log('Ждем окончания генерации уровня...');
-                            setTimeout(checkAndDraw, 50); // Ждем, если генерация затянулась
-                        }
-                    };
-                    checkAndDraw();
-                } else {
-                    console.log('Игрок закрыл видео раньше времени. Уровень не выдается.');
-                    document.getElementById('loading-overlay').classList.add('hidden');
-                }
-            })
-            .catch(error => {
-                console.error('Ошибка при показе Rewarded рекламы в VK:', error);
-                document.getElementById('loading-overlay').classList.add('hidden');
-
-                // Фолбэк: если реклама сломалась или не загрузилась, ВК рекомендует всё равно пустить игрока
-                clear_level();
+                // Проверяем: готов ли уже уровень, сгенерированный в фоне?
                 if (prepared_level_data) {
-                    switchToGameScreen('random', prepared_level_data);
+                    startGameWithPreparedData();
                 } else {
-                    let level_data = generate_level();
-                    switchToGameScreen('random', level_data);
+                    console.log('Уровень еще генерируется, игрок подождет на loading-overlay...');
+                    // Функция startGameWithPreparedData вызовется сама из ШАГА А, когда он завершится
                 }
-            });
-    }, 20);
+            } else {
+                // Сюда код попадет, если игрок закрыл видео крестиком на 1-й секунде
+                console.log('Игрок закрыл видео раньше времени. Сгенерированный уровень сжигается.');
+                document.getElementById('loading-overlay').classList.add('hidden');
+                prepared_level_data = null; // Очищаем данные, уровень не выдается
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка рекламной сети (нет рекламы или сбой сети):', error);
+
+            // Фолбэк (Условие модерации VK): Если реклама не смогла загрузиться,
+            // мы обязаны пустить игрока бесплатно, иначе игру завернут.
+            isAdSuccessfullyWatched = true;
+            if (prepared_level_data) {
+                startGameWithPreparedData();
+            } else {
+                prepared_level_data = generate_level();
+                startGameWithPreparedData();
+            }
+        });
+
+    // Вспомогательная функция для чистого запуска, чтобы не дублировать код
+    function startGameWithPreparedData() {
+        document.getElementById('loading-overlay').classList.add('hidden');
+        clear_level();
+        switchToGameScreen('random', prepared_level_data);
+    }
 }
 
 
