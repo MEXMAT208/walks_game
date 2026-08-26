@@ -180,29 +180,62 @@ button,
 }
 
 .page-nav-btn {
-    background: #ffd700;
-    color: #1a0f08;
+    /* Игровой золотой градиент с объемом */
+    background: linear-gradient(180deg, #ffe866 0%, #ffcc00 50%, #cca300 100%);
+    color: #3d2300; /* Глубокий темно-коричневый вместо скучного черного */
     border: none;
     border-radius: 50%;
     width: 45px;
     height: 45px;
-    font-size: 18px;
+    font-size: 16px; /* Чуть уменьшили для идеального центрирования стрелки */
+    font-weight: bold;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-    transition: transform 0.1s, opacity 0.2s;
+
+    /* Эффект 3D кнопки: плотная тень снизу + мягкая тень на полу */
+    box-shadow:
+        0 4px 0 #997a00,
+        0 6px 10px rgba(0, 0, 0, 0.4);
+
+    /* Плавные переходы для всех состояний */
+    transition: all 0.15s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    outline: none;
+
+    /* Сглаживание шрифтов внутри кнопки */
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
-.page-nav-btn:active {
-    transform: scale(0.9);
+/* Эффект при наведении (для ПК-версии) */
+.page-nav-btn:hover:not(:disabled) {
+    background: linear-gradient(180deg, #ffed80 0%, #ffd71a 50%, #e6b800 100%);
+    transform: translateY(-2px); /* Кнопка слегка приподнимается */
+    box-shadow:
+        0 6px 0 #997a00,
+        0 8px 15px rgba(0, 0, 0, 0.5);
 }
 
+/* Эффект при физическом клике / тапе пальцем */
+.page-nav-btn:active:not(:disabled) {
+    transform: translateY(3px); /* Кнопка вдавливается вниз */
+    /* Нижняя 3D-грань уменьшается, создавая физический отклик */
+    box-shadow:
+        0 1px 0 #997a00,
+        0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* Стильное состояние заблокированной кнопки */
 .page-nav-btn:disabled {
-    opacity: 0.3;
+    background: linear-gradient(180deg, #bdc3c7 0%, #95a5a6 100%);
+    color: #7f8c8d;
+    box-shadow: 0 2px 0 #7f8c8d, 0 3px 5px rgba(0, 0, 0, 0.2);
     cursor: not-allowed;
+    opacity: 0.6;
+    transform: none !important;
 }
+
 
 /* === Базовая кнопка уровня === */
 .level-btn {
