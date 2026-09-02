@@ -405,6 +405,16 @@ function draw_level(level_data) {
     indent_x = ((boardWidth - totalWidth) / 2) + 10;
     indent_y = ((boardHeight - totalHeight) / 2) + 10;
 
+    const boardFrame = document.createElement('div');
+    boardFrame.className = 'grid-board-frame';
+    boardFrame.style.position = 'absolute';
+    // Натягиваем рамку ровно на размеры нашей сетки с учетом небольших отступов наружу
+    boardFrame.style.left = (indent_x - 8) / containerWidth * 100 + '%';
+    boardFrame.style.top = (indent_y - 8) / containerHeight * 100 + '%';
+    boardFrame.style.width = (totalWidth + 16) / containerWidth * 100 + '%';
+    boardFrame.style.height = (totalHeight + 16) / containerHeight * 100 + '%';
+    board.appendChild(boardFrame);
+
     num_heroes = 0
     for(var i = 0; i < n; i++) {
         squares[i] = [];
@@ -452,10 +462,10 @@ function draw_level(level_data) {
 
             // Позиционирование элементов
             squares[i][j].style.position = 'absolute';
-            squares[i][j].style.left = (indent_x + j * cell_size) / containerWidth * 100 + '%'
-            squares[i][j].style.top = (indent_y + i * cell_size) / containerHeight * 100 + '%';
-            squares[i][j].style.width = cell_size / containerWidth * 100 + '%';
-            squares[i][j].style.height = cell_size / containerHeight * 100 + '%';
+            squares[i][j].style.left = (indent_x + j * cell_size + 2) / containerWidth * 100 + '%'
+            squares[i][j].style.top = (indent_y + i * cell_size + 2) / containerHeight * 100 + '%';
+            squares[i][j].style.width = (cell_size - 4) / containerWidth * 100 + '%';
+            squares[i][j].style.height = (cell_size - 4) / containerHeight * 100 + '%';
 
             squares[i][j].row = i
             squares[i][j].col = j
