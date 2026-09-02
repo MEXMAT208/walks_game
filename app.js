@@ -565,7 +565,7 @@ function showLoadingOverlay() {
 }
 
 function showPhoto(level_id) {
-    let level_data = window.GAME_LEVELS.find(l => l.id === parseInt(level_id));
+    level_data = window.GAME_LEVELS.find(l => l.id === parseInt(level_id));
     let currentTime = Date.now();
 
     // 120000 миллисекунд = 2 минуты
