@@ -53,7 +53,7 @@ const translations = {
         completed: "Пройдено: ",
         moves: "Осталось ходов: ",
         win: "🎉 Уровень пройден!",
-        win_desr: "Отличная работа!",
+        win_desc: "Отличная работа!",
         trap: "💀 Вы попали в ловушку!",
         trap_descr: "Попробуйте обойти опасное место",
         lose: "Ходы закончились!",
@@ -72,7 +72,7 @@ const translations = {
         completed: "Completed: ",
         moves: "Moves left: ",
         win: "🎉 Level completed!",
-        win_desr: "Great job!",
+        win_descr: "Great job!",
         trap: "💀 You're trapped",
         trap_descr: "Try to avoid a dangerous place",
         lose: "The moves are over!",
@@ -723,7 +723,7 @@ async function show_win_modal() {
             messageEl.textContent = MILESTONE_MESSAGES[currentLang][curr_level];
             messageEl.classList.add('milestone-message');  // Для особого стиля
         } else {
-            messageEl.textContent = translations[currentLang]['win_desc']
+            messageEl.textContent = translations[currentLang]['win_descr']
             messageEl.classList.remove('milestone-message');
         }
     } else {
