@@ -90,38 +90,16 @@
 
         <!-- Модальные окна (победа, проигрыш, ловушка) -->
         <div id="win-modal" class="modal" style="display: none;">
-    <div class="modal-content">
-        <h2 data-lang-key="win">&#x1F389; Уровень пройден!</h2>
-        <p id="win-message" data-lang-key="win_descr">&#x2B50; Отличная работа!</p>
-
-        <div class="modal-buttons">
-            <!-- Кнопка В меню -->
-            <button id="btn-win-menu" class="btn btn-menu">
-                <svg class="btn-svg-icon" viewBox="0 0 24 24" fill="none" xmlns="http://w3.org">
-                    <path d="M10 20V14H14V20H19V12H22L12 3L2 12H5V20H10Z" fill="currentColor"/>
-                </svg>
-                <span data-lang-key="to_menu">В меню</span>
-            </button>
-
-            <!-- Кнопка Попробовать снова -->
-            <button id="btn-win-replay" class="btn btn-retry">
-                <svg class="btn-svg-icon" viewBox="0 0 24 24" fill="none" xmlns="http://w3.org">
-                    <path d="M17.65 6.35C16.2 4.9 14.21 4 12 4C7.58 4 4.01 7.58 4.01 12C4.01 16.42 7.58 20 12 20C15.73 20 18.84 17.45 19.73 14H17.65C16.83 16.33 14.61 18 12 18C8.69 18 6 15.31 6 12C6 8.69 8.69 6 12 6C13.66 6 15.14 6.69 16.22 7.78L13 11H20V4L17.65 6.35Z" fill="currentColor"/>
-                </svg>
-                <span data-lang-key="retry">Попробовать снова</span>
-            </button>
-
-            <!-- Кнопка Дальше -->
-            <button id="btn-win-next" class="btn btn-next">
-                <span data-lang-key="next">Дальше</span>
-                <svg class="btn-svg-icon" viewBox="0 0 24 24" fill="none" xmlns="http://w3.org">
-                    <path d="M5 13H16.17L11.29 17.88L12.71 19.3L20 12L12.71 4.7L11.29 6.12L16.17 11H5V13Z" fill="currentColor"/>
-                </svg>
-            </button>
+            <div class="modal-content">
+                <h2 data-lang-key="win">🎉 Уровень пройден!</h2>
+                <p id="win-message" data-lang-key="win_descr">Отличная работа!</p>
+                <div class="modal-buttons">
+                    <button id="btn-win-menu" class="btn btn-menu" data-lang-key="to_menu">🏠 В меню</button>
+                    <button id="btn-win-replay" class="btn btn-retry" data-lang-key="retry">🔄 Попробовать снова</button>
+                    <button id="btn-win-next" class="btn btn-next" data-lang-key="next">Дальше →</button>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
-
 
         <div id="lose-modal" class="modal" style="display: none;">
             <div class="modal-content lose-content">
