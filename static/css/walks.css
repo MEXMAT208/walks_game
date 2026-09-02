@@ -563,8 +563,31 @@
 
 .modal-buttons {
     display: flex;
-    gap: 15px;
+    /* ИСПРАВЛЕНИЕ: разрешаем кнопкам переноситься на новую строку, если нет места */
+    flex-wrap: wrap;
+    gap: 12px;
     justify-content: center;
+    width: 100%;
+    box-sizing: border-box;
+    margin-top: 20px;
+}
+
+.modal-buttons .btn {
+    /* Чтобы текст не переносился внутри одной кнопки по буквам */
+    white-space: nowrap;
+
+    /* ИСПРАВЛЕНИЕ: Кнопки будут гибко расширяться.
+       Если места мало, каждая займет 100% ширины контейнера и они встанут красивым списком */
+    flex: 1 1 120px;
+
+    min-height: 45px; /* Удобный размер для нажатия пальцем */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 15px;
+    box-sizing: border-box;
+    font-size: 15px;
 }
 
 .lose-content h2 {
@@ -770,32 +793,65 @@
     font-weight: 500;
 }
 
-
-
 .btn-later:hover {
     background: rgba(0, 0, 0, 0.1);
 }
 
+@media (max-width: 400px) {
+    .modal-buttons .btn {
+        flex: 1 1 100%; /* На совсем узких телефонах все 3 кнопки встанут строго друг под друга */
+    }
+}
+
 /* Адаптивность */
 @media (max-width: 600px) {
-    .modal-content {
-        padding: 25px 20px; /* Уменьшаем внутренние отступы окна (было 40px) */
+    /* 1. Центрируем и масштабируем само модальное окно */
+    #win-modal .modal-content,
+    #lose-modal .modal-content,
+    #trap-modal .modal-content {
+        padding: 25px 15px; /* Мягкие отступы */
+        width: 90% !important; /* Окно займет 90% ширины экрана смартфона */
+        max-width: 360px !important; /* Ограничиваем, чтобы на лопатах не было огромным */
+        box-sizing: border-box !important;
     }
 
-    .modal-content h2 {
-        font-size: 22px; /* Уменьшаем заголовок (было 32px) */
+    /* 2. Настраиваем тексты */
+    #win-modal h2, #lose-modal h2, #trap-modal h2 {
+        font-size: 20px; /* Уменьшаем, чтобы заголовок влезал в одну строку */
         margin-bottom: 8px;
     }
 
-    .modal-content p {
-        font-size: 15px; /* Уменьшаем описание (было 18px) */
-        margin-bottom: 20px; /* Немного прижимаем кнопки к тексту */
+    #win-modal p, #lose-modal p, #trap-modal p {
+        font-size: 15px;
+        margin-bottom: 20px;
     }
 
-    .modal-buttons {
-        gap: 10px; /* Делаем расстояние между кнопками чуть компактнее */
+    /* 3. Разворачиваем контейнер кнопок в вертикальную колонку */
+    #win-modal .modal-buttons,
+    #lose-modal .modal-buttons,
+    #trap-modal .modal-buttons {
+        flex-direction: column !important; /* Ставим кнопки друг под друга */
+        gap: 10px; /* Расстояние между ними */
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* 4. Выравниваем и растягиваем каждую кнопку */
+    #win-modal .btn,
+    #lose-modal .btn,
+    #trap-modal .btn {
+        width: 100% !important; /* Кнопки растянутся на всю ширину белого окна */
+        min-height: 48px; /* Идеальный размер под нажатие пальцем */
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box !important;
+        white-space: nowrap; /* Запрещаем перенос текста внутри кнопки */
+        font-size: 16px;
+        margin: 0 !important; /* Убираем лишние внешние отступы, если они были */
     }
 }
+
 
 
 #win-message {
