@@ -605,7 +605,21 @@ async function markLevelAsCompleted(levelId) {
 }
 
 function clear_level() {
-    // Удаляем всех героев из DOM
+    const frame = document.querySelector('.grid-board-frame');
+    if (frame) frame.parentNode.removeChild(frame);
+
+    // 1. ЖЕЛЕЗНАЯ ОЧИСТКА: Находим контейнер игрового поля
+    const board = document.getElementById('board');
+    if (board) {
+        // Удаляем абсолютно все DOM-узлы старых клеток внутри доски одним махом
+        board.innerHTML = '';
+
+        // Сбрасываем инлайновые стили (grid-template-columns, ширину, высоту),
+        // которые вы могли динамически прописывать для разных размеров сетки
+        board.removeAttribute('style');
+    }
+
+    // 2. Безопасная очистка массивов героев для игровой логики
     heroes.forEach(hero => {
         if (hero && hero.parentNode) {
             hero.parentNode.removeChild(hero);
@@ -613,7 +627,7 @@ function clear_level() {
     });
     heroes = [];
 
-    // Удаляем все клетки из DOM
+    // 3. Безопасная очистка массивов клеток
     for (let i = 0; i < squares.length; i++) {
         if (!squares[i]) continue;
         for (let j = 0; j < squares[i].length; j++) {
@@ -624,10 +638,13 @@ function clear_level() {
     }
     squares = [];
 
+    // 4. Скрытие подсказки ловушки
     const hintText = document.getElementById('hint-text');
-    hintText.classList.remove('show')
+    if (hintText) {
+        hintText.classList.remove('show');
+    }
 
-    // Сбрасываем переменные
+    // Сбрасываем игровые переменные
     num_heroes = 0;
     num_selected = -1;
     in_move = false;
