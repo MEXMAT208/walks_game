@@ -506,17 +506,25 @@
 }
 
 .modal-content {
-    background: white;
-    padding: 40px;
-    border-radius: 15px;
-    text-align: center;
-    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);
-    animation: modalAppear 0.5s ease;
+    /* Деревянная казуальная текстура */
+    background: linear-gradient(180deg, #b07e4d 0%, #7d522a 40%, #5c3414 100%);
 
-    /* Добавьте эти строки для адаптивности: */
-    width: 90%;          /* На маленьких экранах займет 90% ширины */
-    max-width: 500px;    /* На больших экранах не станет шире 500px */
-    box-sizing: border-box; /* Чтобы отступы 40px не раздували ширину */
+    /* Плотная рамка, как у игрового поля */
+    border: 6px solid #4a280d;
+    border-radius: 24px;
+    padding: 30px 25px;
+    text-align: center;
+
+    /* Тройная тень: внутренний световой блик + 3D объем вниз + мягкая тень на полу */
+    box-shadow:
+        inset 0 2px 4px rgba(255, 255, 255, 0.4),
+        0 12px 0px #2d1604,
+        0 20px 30px rgba(0, 0, 0, 0.6);
+
+    width: 90%;
+    max-width: 440px;
+    box-sizing: border-box;
+    animation: modalAppear 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 @keyframes modalAppear {
@@ -550,15 +558,25 @@
 }
 
 .modal-content h2 {
-    margin: 0 0 10px 0;
-    color: #2c3e50;
-    font-size: 32px;
+    margin: 0 0 15px 0;
+    color: #ffffff;
+    font-family: 'Arial Rounded MT Bold', 'Nunito', 'Georgia', serif;
+    font-size: 28px;
+    /* Плотная тень под текстом, чтобы он читался на дереве */
+    text-shadow: 0 3px 0px #361902, 0 4px 8px rgba(0,0,0,0.5);
 }
 
 .modal-content p {
-    margin: 0 0 30px 0;
-    color: #7f8c8d;
-    font-size: 18px;
+    background: linear-gradient(180deg, #fffcf2 0%, #f4ebd0 100%);
+    border: 2px solid #c8b18a;
+    border-radius: 16px;
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.15), 0 2px 0px rgba(255,255,255,0.5);
+
+    padding: 12px 20px;
+    margin: 0 0 25px 0;
+    color: #4a280d; /* Темно-коричневый читаемый текст */
+    font-size: 16px;
+    font-weight: bold;
 }
 
 .modal-buttons {
@@ -572,30 +590,6 @@
     margin-top: 20px;
 }
 
-.modal-buttons .btn {
-    /* Чтобы текст не переносился внутри одной кнопки по буквам */
-    white-space: nowrap;
-
-    /* ИСПРАВЛЕНИЕ: Кнопки будут гибко расширяться.
-       Если места мало, каждая займет 100% ширины контейнера и они встанут красивым списком */
-    flex: 1 1 120px;
-
-    min-height: 45px; /* Удобный размер для нажатия пальцем */
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 10px 15px;
-    box-sizing: border-box;
-    font-size: 15px;
-}
-
-.lose-content h2 {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px; /* Расстояние между часами и текстом */
-}
 
 /* Стили для тряски остаются прежними */
 .shake-clock {
@@ -616,61 +610,69 @@
 
 
 /* === Общие стили для всех кнопок === */
-.btn {
-    padding: 12px 24px;
+
+
+/* Базовый игровой класс для всех кнопок в окнах */
+.modal-buttons .btn {
+    height: 48px;
+    border: 2px solid;
+    border-radius: 24px; /* Округлые казуальные кнопки */
+    color: #ffffff;
     font-size: 16px;
-    font-weight: 600;
-    font-family: 'Georgia', serif;
-    border-radius: 8px;
-    border: 2px solid transparent;
+    font-weight: bold;
+    font-family: sans-serif;
     cursor: pointer;
-    transition: all 0.2s ease;
-    color: white;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 22px;
+    box-sizing: border-box;
+    white-space: nowrap;
+
+    /* Эффект глянца сверху + мягкая тень */
+    box-shadow: inset 0 2px 0px rgba(255, 255, 255, 0.4), 0 4px 6px rgba(0,0,0,0.3);
+    text-shadow: 0 2px 2px rgba(0,0,0,0.4);
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
 
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+/* Физический клик по кнопке (вдавливание) */
+.modal-buttons .btn:active {
+    transform: translateY(3px);
+    box-shadow: inset 0 2px 0px rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0,0,0,0.3);
 }
 
-.btn:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+/* 1. Кнопка "В меню" (Спокойный стальной синий) */
+.modal-buttons .btn-menu {
+    background: linear-gradient(180deg, #748a9e 0%, #4a5b6c 100%);
+    border-color: #34414d;
+    box-shadow: inset 0 2px 0px rgba(255, 255, 255, 0.4), 0 4px 0px #25303a, 0 4px 6px rgba(0,0,0,0.3);
+}
+.modal-buttons .btn-menu:active {
+    box-shadow: inset 0 2px 0px rgba(255, 255, 255, 0.2), 0 1px 0px #25303a, 0 1px 2px rgba(0,0,0,0.3);
 }
 
-/* === Серая кнопка "В меню" === */
-.btn-menu {
-    background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
-    border-color: #6c7a7b;
+/* 2. Кнопка "Попробовать снова" (Сочный игровой оранжевый) */
+.modal-buttons .btn-retry {
+    background: linear-gradient(180deg, #ff9933 0%, #e66100 100%);
+    border-color: #a64400;
+    box-shadow: inset 0 2px 0px rgba(255, 255, 255, 0.4), 0 4px 0px #803300, 0 4px 6px rgba(0,0,0,0.3);
+}
+.modal-buttons .btn-retry:active {
+    box-shadow: inset 0 2px 0px rgba(255, 255, 255, 0.2), 0 1px 0px #803300, 0 1px 2px rgba(0,0,0,0.3);
 }
 
-.btn-menu:hover {
-    background: linear-gradient(135deg, #7f8c8d 0%, #6c7a7b 100%);
+/* 3. Кнопка "Дальше" (Премиальный салатовый) */
+.modal-buttons .btn-next {
+    background: linear-gradient(180deg, #2ecc71 0%, #27ae60 100%);
+    border-color: #196134;
+    box-shadow: inset 0 2px 0px rgba(255, 255, 255, 0.4), 0 4px 0px #114724, 0 4px 6px rgba(0,0,0,0.3);
+}
+.modal-buttons .btn-next:active {
+    box-shadow: inset 0 2px 0px rgba(255, 255, 255, 0.2), 0 1px 0px #114724, 0 1px 2px rgba(0,0,0,0.3);
 }
 
-/* === Оранжевая кнопка "Ещё раз" === */
-.btn-retry {
-    background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
-    border-color: #d35400;
-}
-
-.btn-retry:hover {
-    background: linear-gradient(135deg, #e67e22 0%, #d35400 100%);
-}
-
-/* === Зелёная кнопка "Дальше" === */
-.btn-next {
-    background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
-    border-color: #1e8449;
-}
-
-.btn-next:hover {
-    background: linear-gradient(135deg, #27ae60 0%, #1e8449 100%);
-}
 
 
 /* === Группа элементов справа === */
@@ -805,53 +807,33 @@
 
 /* Адаптивность */
 @media (max-width: 600px) {
-    /* 1. Центрируем и масштабируем само модальное окно */
     #win-modal .modal-content,
     #lose-modal .modal-content,
     #trap-modal .modal-content {
-        padding: 25px 15px; /* Мягкие отступы */
-        width: 90% !important; /* Окно займет 90% ширины экрана смартфона */
-        max-width: 360px !important; /* Ограничиваем, чтобы на лопатах не было огромным */
-        box-sizing: border-box !important;
+        padding: 20px 15px !important;
+        width: 92% !important;
     }
 
-    /* 2. Настраиваем тексты */
-    #win-modal h2, #lose-modal h2, #trap-modal h2 {
-        font-size: 20px; /* Уменьшаем, чтобы заголовок влезал в одну строку */
-        margin-bottom: 8px;
+    #win-modal .modal-content h2,
+    #lose-modal .modal-content h2,
+    #trap-modal .modal-content h2 {
+        font-size: 22px !important;
     }
 
-    #win-modal p, #lose-modal p, #trap-modal p {
-        font-size: 15px;
-        margin-bottom: 20px;
-    }
-
-    /* 3. Разворачиваем контейнер кнопок в вертикальную колонку */
     #win-modal .modal-buttons,
     #lose-modal .modal-buttons,
     #trap-modal .modal-buttons {
-        flex-direction: column !important; /* Ставим кнопки друг под друга */
-        gap: 10px; /* Расстояние между ними */
-        width: 100% !important;
-        box-sizing: border-box !important;
+        flex-direction: column !important; /* На смартфонах выстраиваем в колонку */
+        gap: 12px !important;
     }
 
-    /* 4. Выравниваем и растягиваем каждую кнопку */
     #win-modal .btn,
     #lose-modal .btn,
     #trap-modal .btn {
-        width: 100% !important; /* Кнопки растянутся на всю ширину белого окна */
-        min-height: 48px; /* Идеальный размер под нажатие пальцем */
-        display: inline-flex !important;
-        align-items: center;
-        justify-content: center;
-        box-sizing: border-box !important;
-        white-space: nowrap; /* Запрещаем перенос текста внутри кнопки */
-        font-size: 16px;
-        margin: 0 !important; /* Убираем лишние внешние отступы, если они были */
+        width: 100% !important; /* Кнопки растянутся во всю ширину окна */
+        height: 48px !important;
     }
 }
-
 
 
 #win-message {
