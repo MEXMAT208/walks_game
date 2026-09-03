@@ -1022,7 +1022,7 @@
         max-width: 100% !important;
 
         /* ЖЕСТКАЯ БЛОКИРОВКА ВЫСОТЫ: Кнопка гарантированно станет толстой */
-        height: 50px !important;     /* Базовая высота */
+        height: 60px !important;     /* Базовая высота */
         min-height: 50px !important; /* Не даем Flexbox сжать ее по вертикали */
         max-height: 50px !important; /* Не даем ей раздуться слишком сильно */
 
