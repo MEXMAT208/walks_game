@@ -1,6 +1,6 @@
 let lockedToastTimer = null;
 let completed_levels = [];
-let lastAdShowTime = 0;
+let lastAdShowTime = Date.now();
 
 let squares = []
 let heroes = []
@@ -220,12 +220,13 @@ function playRandomWithAds() {
 function unlockPremiumLevelWithAds(level_id) {
     vkBridge.send('VKWebAppShowNativeAds', { ad_format: 'reward' })
         .then(data => {
-            if (data.result) {
+            if (data && data.result == true) {
                 console.log('Видео досмотрено! Открываем премиум уровень...');
                 // Игрок досмотрел рекламу до конца — запускаем уровень
                 switchToGameScreen(level_id);
             } else {
                 console.log('Игрок закрыл видео раньше времени. Уровень остается заблокирован.');
+                switchToMenuScreen();
             }
         })
         .catch(error => {
