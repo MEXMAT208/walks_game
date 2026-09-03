@@ -180,6 +180,10 @@ button,
 }
 
 .page-nav-btn {
+    flex-shrink: 0 !important;       /* Запрещаем сжимать кнопку с боков */
+    aspect-ratio: 1 / 1 !important;  /* Гарантируем, что ширина всегда равна высоте */
+    box-sizing: border-box !important;
+
     /* Игровой золотой градиент с объемом */
     background: linear-gradient(180deg, #ffe866 0%, #ffcc00 50%, #cca300 100%);
     color: #3d2300; /* Глубокий темно-коричневый вместо скучного черного */
@@ -449,12 +453,22 @@ button,
     }
 
     /* Защита для иконки замочка 🔒 внутри кнопки */
-    .level-btn .lock-icon {
-        width: 16px !important;
-        height: 16px !important;
-        position: absolute;
-        top: 6px;
-        right: 6px;
+    .level-btn .lock-icon,
+    {
+        position: absolute !important;
+        /* Координаты: прижимаем в угол, но оставляем аккуратный игровой зазор по 6 пикселей */
+        top: 6px !important;
+        right: 6px !important;
+
+        /* Защищаем размер значка, чтобы он не раздувался на мобильных */
+        font-size: 14px !important;
+        line-height: 1 !important;
+        width: auto !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+
+        z-index: 5 !important; /* Ставим поверх цифры уровня */
     }
 }
 
