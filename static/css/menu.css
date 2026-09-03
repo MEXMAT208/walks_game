@@ -673,6 +673,10 @@ button,
 
 /* Мобильная версия */
 @media (max-width: 420px) {
+    .page-nav-btn {
+        height: 40px;
+    }
+
     .locked-toast {
         top: 15px;
         padding: 12px 18px;
