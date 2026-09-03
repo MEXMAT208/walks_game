@@ -195,17 +195,26 @@ function playRandomWithAds() {
             }
         })
         .catch(error => {
-            console.error('Ошибка рекламной сети (нет рекламы или сбой сети):', error);
+            console.error('Ошибка при показе Rewarded рекламы в VK:', error);
 
-            // Фолбэк (Условие модерации VK): Если реклама не смогла загрузиться,
-            // мы обязаны пустить игрока бесплатно, иначе игру завернут.
-            isAdSuccessfullyWatched = true;
-            if (prepared_level_data) {
-                startGameWithPreparedData();
+            // Проверяем, почему сработал .catch()
+            const errorReason = error && error.error_data ? error.error_data.error_reason : '';
+
+            if (errorReason === 'User denied' || errorReason === 'Operation denied by user') {
+                // Игрок САМ осознанно закрыл рекламу крестиком. Награду НЕ ДАЕМ!
+                console.log('Игрок отменил просмотр. Уровень остается закрытым.');
+                document.getElementById('loading-overlay').classList.add('hidden');
+                switchToMenuScreen()
             } else {
-                prepared_level_data = generate_level();
-                startGameWithPreparedData();
+                if (prepared_level_data) {
+                    document.getElementById('loading-overlay').classList.add('hidden');
+                    startGameWithPreparedData();
+                } else {
+                    prepared_level_data = generate_level();
+                    startGameWithPreparedData();
+                }
             }
+
         });
 
     // Вспомогательная функция для чистого запуска, чтобы не дублировать код
@@ -232,7 +241,26 @@ function unlockPremiumLevelWithAds(level_id) {
         .catch(error => {
             console.error('Ошибка при показе Rewarded рекламы в VK:', error);
 
-            switchToGameScreen(level_id);
+            // Проверяем, почему сработал .catch()
+            const errorReason = error && error.error_data ? error.error_data.error_reason : '';
+
+            if (errorReason === 'User denied' || errorReason === 'Operation denied by user') {
+                // Игрок САМ осознанно закрыл рекламу крестиком. Награду НЕ ДАЕМ!
+                console.log('Игрок отменил просмотр. Уровень остается закрытым.');
+                document.getElementById('loading-overlay').classList.add('hidden');
+                switchToMenuScreen();
+            } else {
+                // Сюда мы попадем, только если упал интернет или у ВК нет рекламы (No Fill).
+                // Только в этом случае ВК требует пустить игрока бесплатно, чтобы пройти модерацию.
+                console.log('Техническая ошибка сети или No Fill. Пускаем бесплатно по правилам ВК.');
+                isAdSuccessfullyWatched = true;
+
+                if (prepared_level_data) {
+                    startGameWithPreparedData();
+                } else {
+                    console.log('Ждем фоновую генерацию после ошибки сети...');
+                }
+            }
         });
 }
 
