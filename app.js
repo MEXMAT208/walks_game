@@ -783,7 +783,7 @@ function next_level() {
         playRandomWithAds()
     } else {
         curr_level += 1
-        if (curr_level <= last_free_level) {
+        if (curr_level <= last_free_level || completed_levels.includes(curr_level)) {
             showPhoto(curr_level)
         } else {
             unlockPremiumLevelWithAds(curr_level)
