@@ -835,94 +835,6 @@
     background: rgba(0, 0, 0, 0.1);
 }
 
-
-
-
-/* Адаптивность */
-@media (max-width: 600px) {
-    /* 1. Настраиваем размеры и отступы самого деревянного окна */
-    #win-modal .modal-content,
-    #lose-modal .modal-content,
-    #trap-modal .modal-content {
-        padding: 25px 20px !important;
-        width: 90% !important; /* Окно займет 90% ширины экрана телефона */
-        max-width: 360px !important;
-        box-sizing: border-box !important;
-    }
-
-    /* 2. Растягиваем контейнер кнопок и перестраиваем его в колонку */
-    #win-modal .modal-buttons,
-    #lose-modal .modal-buttons,
-    #trap-modal .modal-buttons {
-        display: flex !important;
-        flex-direction: column !important; /* Строго друг под друга */
-        gap: 12px !important; /* Расстояние между кнопками */
-        width: 100% !important; /* Занимает 100% ширины деревянного окна */
-        box-sizing: border-box !important;
-        padding: 0 !important; /* Убираем любые боковые зажимы */
-        margin-top: 15px !important;
-    }
-
-    /* 3. Выжигаем ограничения ПК-версии и растягиваем каждую кнопку на 100% */
-    #win-modal .btn,
-    #lose-modal .btn,
-    #trap-modal .btn {
-        flex: 1 1 100% !important;
-
-        /* Убираем старую фиксированную ширину с компьютера */
-        width: 100% !important;
-        min-width: 100% !important;
-        max-width: 100% !important;
-
-        height: 48px !important; /* Комфортная высота для точного нажатия пальцем */
-        max-height: 48px !important;
-
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        box-sizing: border-box !important;
-        white-space: nowrap !important; /* Запрещаем тексту ломаться на две строки */
-        font-size: 16px !important;
-        border-radius: 24px !important; /* Красивые округлые края */
-        margin: 0 !important; /* Обнуляем внешние отступы */
-    }
-
-}
-
-
-@media (max-width: 420px) {
-    /* Растягиваем сам контейнер кнопок, чтобы убрать боковые зажимы */
-    .modal-buttons {
-        flex-direction: column !important; /* Жестко выстраиваем в колонку */
-        width: 100% !important;
-        box-sizing: border-box !important;
-        padding: 0 !important;
-    }
-
-    /* Растягиваем кнопки на весь экран телефона */
-    .modal-buttons .btn {
-        flex: 1 1 100% !important;
-        width: 100% !important;
-        min-width: 100% !important;
-        max-width: 100% !important;
-
-        /* ЖЕСТКАЯ БЛОКИРОВКА ВЫСОТЫ: Кнопка гарантированно станет толстой */
-        height: 50px !important;     /* Базовая высота */
-        min-height: 50px !important; /* Не даем Flexbox сжать ее по вертикали */
-        max-height: 50px !important; /* Не даем ей раздуться слишком сильно */
-
-        /* Добавляем внутренние отступы для центрирования контента */
-        padding: 0 15px !important;
-        font-size: 16px !important;
-        font-weight: bold !important;
-
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        box-sizing: border-box !important;
-    }
-}
-
 #win-message {
     font-size: 18px;
     color: #7f8c8d;
@@ -1035,4 +947,93 @@
     height: 0 !important;
     margin: 0 !important;
     padding: 0 !important;
+}
+
+
+@media (max-width: 600px) {
+    /* 1. Настраиваем размеры и отступы самого деревянного окна */
+    #win-modal .modal-content,
+    #lose-modal .modal-content,
+    #trap-modal .modal-content {
+        padding: 25px 20px !important;
+        width: 90% !important; /* Окно займет 90% ширины экрана телефона */
+        max-width: 360px !important;
+        box-sizing: border-box !important;
+    }
+
+    /* 2. Растягиваем контейнер кнопок и перестраиваем его в колонку */
+    #win-modal .modal-buttons,
+    #lose-modal .modal-buttons,
+    #trap-modal .modal-buttons {
+        display: flex !important;
+        flex-direction: column !important; /* Строго друг под друга */
+        gap: 12px !important; /* Расстояние между кнопками */
+        width: 100% !important; /* Занимает 100% ширины деревянного окна */
+        box-sizing: border-box !important;
+        padding: 0 !important; /* Убираем любые боковые зажимы */
+        margin-top: 15px !important;
+    }
+
+    /* 3. Выжигаем ограничения ПК-версии и растягиваем каждую кнопку на 100% */
+    #win-modal .btn,
+    #lose-modal .btn,
+    #trap-modal .btn {
+        flex: 1 1 100% !important;
+
+        /* Убираем старую фиксированную ширину с компьютера */
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+
+        height: 48px !important; /* Комфортная высота для точного нажатия пальцем */
+        max-height: 48px !important;
+
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+        white-space: nowrap !important; /* Запрещаем тексту ломаться на две строки */
+        font-size: 16px !important;
+        border-radius: 24px !important; /* Красивые округлые края */
+        margin: 0 !important; /* Обнуляем внешние отступы */
+    }
+
+}
+
+
+@media (max-width: 420px) {
+    .modal-content h2 {
+        font-size: 24px;
+    }
+
+    /* Растягиваем сам контейнер кнопок, чтобы убрать боковые зажимы */
+    .modal-buttons {
+        flex-direction: column !important; /* Жестко выстраиваем в колонку */
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 0 !important;
+    }
+
+    /* Растягиваем кнопки на весь экран телефона */
+    .modal-buttons .btn {
+        flex: 1 1 100% !important;
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+
+        /* ЖЕСТКАЯ БЛОКИРОВКА ВЫСОТЫ: Кнопка гарантированно станет толстой */
+        height: 50px !important;     /* Базовая высота */
+        min-height: 50px !important; /* Не даем Flexbox сжать ее по вертикали */
+        max-height: 50px !important; /* Не даем ей раздуться слишком сильно */
+
+        /* Добавляем внутренние отступы для центрирования контента */
+        padding: 0 15px !important;
+        font-size: 16px !important;
+        font-weight: bold !important;
+
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+    }
 }
