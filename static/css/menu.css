@@ -392,9 +392,9 @@ button,
         font-size: 44px;
     }
     .levels-grid {
-        grid-template-columns: repeat(3, 120px) !important;
+        grid-template-columns: repeat(3, 1fr) !important;
         /* 3 ряда ровно по 80px */
-        grid-template-rows: repeat(5, 100px) !important;
+        grid-template-rows: repeat(5, 1fr) !important;
         gap: 8px;
     }
     .level-btn {

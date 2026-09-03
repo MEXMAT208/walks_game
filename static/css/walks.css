@@ -631,9 +631,6 @@
 }
 
 
-/* === Общие стили для всех кнопок === */
-
-
 /* Базовый игровой класс для всех кнопок в окнах */
 .modal-buttons .btn {
     height: 48px;
@@ -838,31 +835,7 @@
     background: rgba(0, 0, 0, 0.1);
 }
 
-@media (max-width: 400px) {
-    /* Растягиваем сам контейнер кнопок, чтобы убрать боковые зажимы */
-    .modal-buttons {
-        flex-direction: column !important; /* Жестко выстраиваем в колонку */
-        width: 100% !important;
-        box-sizing: border-box !important;
-        padding: 0 !important;
-    }
 
-    /* Растягиваем кнопки на весь экран телефона */
-    .modal-buttons .btn {
-        flex: 1 1 100% !important;
-
-        /* КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Выжигаем старую фиксированную ширину ПК-версии */
-        width: 100% !important;
-        min-width: 100% !important;
-        max-width: 100% !important;
-
-        height: 48px !important; /* Удобная высота для пальца */
-        display: inline-flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        box-sizing: border-box !important;
-    }
-}
 
 
 /* Адаптивность */
@@ -914,14 +887,32 @@
         margin: 0 !important; /* Обнуляем внешние отступы */
     }
 
-    /* 4. Ограничиваем SVG-иконки, чтобы они оставались аккуратными */
-    #win-modal .btn .btn-svg-icon,
-    #lose-modal .btn .btn-svg-icon,
-    #trap-modal .btn .btn-svg-icon {
-        width: 20px !important;
-        height: 20px !important;
-        max-width: 20px !important;
-        max-height: 20px !important;
+}
+
+
+@media (max-width: 420px) {
+    /* Растягиваем сам контейнер кнопок, чтобы убрать боковые зажимы */
+    .modal-buttons {
+        flex-direction: column !important; /* Жестко выстраиваем в колонку */
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 0 !important;
+    }
+
+    /* Растягиваем кнопки на весь экран телефона */
+    .modal-buttons .btn {
+        flex: 1 1 100% !important;
+
+        /* КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Выжигаем старую фиксированную ширину ПК-версии */
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+
+        height: 48px !important; /* Удобная высота для пальца */
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
     }
 }
 
