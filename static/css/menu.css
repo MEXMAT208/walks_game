@@ -470,6 +470,40 @@ button,
 
         z-index: 5 !important; /* Ставим поверх цифры уровня */
     }
+
+    .level-btn.premium {
+        position: relative !important;
+        display: inline-flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+    }
+
+    .level-btn.premium::after {
+        position: absolute !important;
+        /* Прижимаем плотнее к углам, оставляя зазор всего 4 пикселя */
+        top: 4px !important;
+        right: 4px !important;
+
+        /* ИСПРАВЛЕНИЕ: Уменьшаем размер иконки, чтобы она не перекрывала цифру */
+        font-size: 13px !important;
+        line-height: 1 !important;
+
+        width: auto !important;
+        height: auto !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        z-index: 5 !important; /* Гарантируем, что она лежит поверх фона, но аккуратно сбоку */
+    }
+
+    .level-btn.premium .level-number {
+        font-size: 24px !important;
+        line-height: 1 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+    }
 }
 
 
