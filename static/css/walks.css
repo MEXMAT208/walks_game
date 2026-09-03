@@ -839,41 +839,91 @@
 }
 
 @media (max-width: 400px) {
+    /* Растягиваем сам контейнер кнопок, чтобы убрать боковые зажимы */
+    .modal-buttons {
+        flex-direction: column !important; /* Жестко выстраиваем в колонку */
+        width: 100% !important;
+        box-sizing: border-box !important;
+        padding: 0 !important;
+    }
+
+    /* Растягиваем кнопки на весь экран телефона */
     .modal-buttons .btn {
-        flex: 1 1 100%; /* На совсем узких телефонах все 3 кнопки встанут строго друг под друга */
+        flex: 1 1 100% !important;
+
+        /* КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Выжигаем старую фиксированную ширину ПК-версии */
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+
+        height: 48px !important; /* Удобная высота для пальца */
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
     }
 }
+
 
 /* Адаптивность */
 @media (max-width: 600px) {
+    /* 1. Настраиваем размеры и отступы самого деревянного окна */
     #win-modal .modal-content,
     #lose-modal .modal-content,
     #trap-modal .modal-content {
-        padding: 20px 15px !important;
-        width: 92% !important;
+        padding: 25px 20px !important;
+        width: 90% !important; /* Окно займет 90% ширины экрана телефона */
+        max-width: 360px !important;
+        box-sizing: border-box !important;
     }
 
-    #win-modal .modal-content h2,
-    #lose-modal .modal-content h2,
-    #trap-modal .modal-content h2 {
-        font-size: 22px !important;
-    }
-
+    /* 2. Растягиваем контейнер кнопок и перестраиваем его в колонку */
     #win-modal .modal-buttons,
     #lose-modal .modal-buttons,
     #trap-modal .modal-buttons {
-        flex-direction: column !important; /* На смартфонах выстраиваем в колонку */
-        gap: 12px !important;
+        display: flex !important;
+        flex-direction: column !important; /* Строго друг под друга */
+        gap: 12px !important; /* Расстояние между кнопками */
+        width: 100% !important; /* Занимает 100% ширины деревянного окна */
+        box-sizing: border-box !important;
+        padding: 0 !important; /* Убираем любые боковые зажимы */
+        margin-top: 15px !important;
     }
 
+    /* 3. Выжигаем ограничения ПК-версии и растягиваем каждую кнопку на 100% */
     #win-modal .btn,
     #lose-modal .btn,
     #trap-modal .btn {
-        width: 100% !important; /* Кнопки растянутся во всю ширину окна */
-        height: 48px !important;
+        flex: 1 1 100% !important;
+
+        /* Убираем старую фиксированную ширину с компьютера */
+        width: 100% !important;
+        min-width: 100% !important;
+        max-width: 100% !important;
+
+        height: 48px !important; /* Комфортная высота для точного нажатия пальцем */
+        max-height: 48px !important;
+
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+        white-space: nowrap !important; /* Запрещаем тексту ломаться на две строки */
+        font-size: 16px !important;
+        border-radius: 24px !important; /* Красивые округлые края */
+        margin: 0 !important; /* Обнуляем внешние отступы */
+    }
+
+    /* 4. Ограничиваем SVG-иконки, чтобы они оставались аккуратными */
+    #win-modal .btn .btn-svg-icon,
+    #lose-modal .btn .btn-svg-icon,
+    #trap-modal .btn .btn-svg-icon {
+        width: 20px !important;
+        height: 20px !important;
+        max-width: 20px !important;
+        max-height: 20px !important;
     }
 }
-
 
 #win-message {
     font-size: 18px;

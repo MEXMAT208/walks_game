@@ -343,7 +343,7 @@ button,
 }
 
 .level-btn.premium::after {
-    content: '🎞';
+    content: '\1f39e';
     position: absolute;
     top: 5px;
     right: 5px;
@@ -403,31 +403,61 @@ button,
 }
 
 /* Для очень узких экранов (iPhone SE) — 3 колонки */
-@media (max-width: 380px) {
+@media (max-width: 420px) {
     .premium-badge {
         font-size: 18px;
     }
+
     .game-title {
-        font-size: 36px;
+        font-size: 32px; /* Чуть уменьшили (было 36), чтобы заголовок игры не ломал экран */
     }
+
+    /* ИСПРАВЛЕНИЕ СЕТКИ УРОВНЕЙ */
     .levels-grid {
-        grid-template-columns: repeat(3, 80px) !important;
-    /* 3 ряда ровно по 80px */
-        grid-template-rows: repeat(5, 70px) !important;
-        gap: 8px; /* Уменьшили с 10px, чтобы освободить 6px места */
-        padding-left: 0;  /* Сбрасываем лишние отступы, */
-        padding-right: 0; /* если они были у самой сетки */
+        display: grid !important;
+        /* Гибкие 3 колонки, которые сами поровну разделят экран телефона */
+        grid-template-columns: repeat(3, 1fr) !important;
+        /* Высоту рядов делаем автоматической, она подстроится под ширину! */
+        grid-template-rows: repeat(5, 1fr) !important;
+
+        gap: 10px !important; /* Удобный игровой зазор между кнопками */
+        width: 100% !important;
+        max-width: 290px !important; /* Ограничиваем общую ширину сетки, чтобы был "воздух" по бокам */
+        margin: 0 auto !important;   /* Центрируем всю сетку на экране смартфона */
+        padding: 0 !important;
+        box-sizing: border-box !important;
     }
+
+    /* ИСПРАВЛЕНИЕ КНОПОК УРОВНЕЙ */
     .level-btn {
-        height: auto;
-        aspect-ratio: 1;
-        width: 100%;       /* Кнопка занимает строго ширину своей колонки */
-        min-width: 0;      /* Запрещает кнопке распирать колонку */
+        width: 100% !important;
+        /* ГАРАНТИЯ КВАДРАТА: Кнопка всегда будет идеальным квадратом, подстраиваясь под ширину экрана */
+        aspect-ratio: 1 / 1 !important;
+        height: auto !important; /* Сбрасываем старые 70px, которые сплющивали кнопки */
+
+        display: inline-flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+        position: relative !important;
     }
+
     .level-btn .level-number {
-        font-size: 27px;   /* Немного уменьшили, чтобы текст точно не жал по бокам */
+        font-size: 24px; /* Оптимальный крупный игровой размер цифры */
+        line-height: 1;
+    }
+
+    /* Защита для иконки замочка 🔒 внутри кнопки */
+    .level-btn .lock-icon {
+        width: 16px !important;
+        height: 16px !important;
+        position: absolute;
+        top: 6px;
+        right: 6px;
     }
 }
+
 
 .btn-premium:hover {
     transform: scale(1.05);
