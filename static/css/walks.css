@@ -902,13 +902,20 @@
     /* Растягиваем кнопки на весь экран телефона */
     .modal-buttons .btn {
         flex: 1 1 100% !important;
-
-        /* КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Выжигаем старую фиксированную ширину ПК-версии */
         width: 100% !important;
         min-width: 100% !important;
         max-width: 100% !important;
 
-        height: 48px !important; /* Удобная высота для пальца */
+        /* ЖЕСТКАЯ БЛОКИРОВКА ВЫСОТЫ: Кнопка гарантированно станет толстой */
+        height: 50px !important;     /* Базовая высота */
+        min-height: 50px !important; /* Не даем Flexbox сжать ее по вертикали */
+        max-height: 50px !important; /* Не даем ей раздуться слишком сильно */
+
+        /* Добавляем внутренние отступы для центрирования контента */
+        padding: 0 15px !important;
+        font-size: 16px !important;
+        font-weight: bold !important;
+
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;
