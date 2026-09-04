@@ -385,9 +385,6 @@ button,
 
 /* Адаптивность */
 @media (max-width: 600px) {
-    .premium-badge {
-        font-size: 22px;
-    }
     .game-title {
         font-size: 44px;
     }
@@ -408,10 +405,6 @@ button,
 
 /* Для очень узких экранов (iPhone SE) — 3 колонки */
 @media (max-width: 420px) {
-    .premium-badge {
-        font-size: 18px;
-    }
-
     .game-title {
         font-size: 32px; /* Чуть уменьшили (было 36), чтобы заголовок игры не ломал экран */
     }
@@ -483,11 +476,11 @@ button,
     .level-btn.premium::after {
         position: absolute !important;
         /* Прижимаем плотнее к углам, оставляя зазор всего 4 пикселя */
-        top: 4px !important;
-        right: 4px !important;
+        top: 3px !important;
+        right: 3px !important;
 
         /* ИСПРАВЛЕНИЕ: Уменьшаем размер иконки, чтобы она не перекрывала цифру */
-        font-size: 13px !important;
+        font-size: 12px !important;
         line-height: 1 !important;
 
         width: auto !important;
