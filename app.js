@@ -605,8 +605,8 @@ function showPhoto(level_id) {
 
         // Вызываем рекламу VK
         vkBridge.send('VKWebAppShowNativeAds', { ad_format: 'interstitial' })
-            .then(() => switchToGameScreen(level_id)
-            .catch(() => switchToGameScreen(level_id);
+            .then(() => switchToGameScreen(level_id))
+            .catch(() => switchToGameScreen(level_id));
     } else {
         // Прошло мало времени — пускаем игрока сразу без запросов к VK
         console.log("Реклама пропущена по внутреннему таймеру игры");
