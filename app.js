@@ -597,7 +597,6 @@ function showLoadingOverlay() {
 }
 
 function showPhoto(level_id) {
-    level_data = window.GAME_LEVELS.find(l => l.id === parseInt(level_id));
     let currentTime = Date.now();
 
     // 60000 миллисекунд = 2 минуты
@@ -606,12 +605,12 @@ function showPhoto(level_id) {
 
         // Вызываем рекламу VK
         vkBridge.send('VKWebAppShowNativeAds', { ad_format: 'interstitial' })
-            .then(() => draw_level(level_data))
-            .catch(() => draw_level(level_data));
+            .then(() => switchToGameScreen(level_id)
+            .catch(() => switchToGameScreen(level_id);
     } else {
         // Прошло мало времени — пускаем игрока сразу без запросов к VK
         console.log("Реклама пропущена по внутреннему таймеру игры");
-        draw_level(level_data);
+        switchToGameScreen(level_id);
     }
 }
 
