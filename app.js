@@ -303,8 +303,11 @@ function renderLevels() {
                 return;
             }
 
-            // Доступный или пройденный → запускаем игру
-            launchLevel(levelNum);
+            if (state == 'completed') {
+                launchLevel(levelNum);
+            } else {
+                showPhoto(levelNum)
+            }
         });
 
         grid.appendChild(btn);
@@ -597,8 +600,8 @@ function showPhoto(level_id) {
     level_data = window.GAME_LEVELS.find(l => l.id === parseInt(level_id));
     let currentTime = Date.now();
 
-    // 120000 миллисекунд = 2 минуты
-    if (currentTime - lastAdShowTime > 120000) {
+    // 60000 миллисекунд = 2 минуты
+    if (currentTime - lastAdShowTime > 60000) {
         lastAdShowTime = currentTime; // Обновляем время таймера
 
         // Вызываем рекламу VK
