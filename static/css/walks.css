@@ -589,17 +589,49 @@
 }
 
 .modal-content p {
-    background: linear-gradient(180deg, #fffcf2 0%, #f4ebd0 100%);
-    border: 2px solid #c8b18a;
-    border-radius: 16px;
-    box-shadow: inset 0 2px 5px rgba(0,0,0,0.15), 0 2px 0px rgba(255,255,255,0.5);
+    /* Меняем градиент на более мягкий, пергаментный/льняной оттенок */
+    background: linear-gradient(180deg, #fffaf0 0%, #f7f1e3 100%);
 
-    padding: 12px 20px;
+    /* Делаем рамку более плотной, цвета тёмного шоколада, чтобы она очерчивала текст */
+    border: 3px solid #4a280d;
+    border-radius: 12px; /* Чуть уменьшили скругление, чтобы убрать ассоциацию с кнопкой */
+
+    /* ИСПРАВЛЕНИЕ ТЕНИ: Убрали inset! Теперь тень падает НА деревянный фон окна.
+       Плашка выглядит как объёмная приколоченная табличка */
+    box-shadow:
+        0 4px 0px #311803, /* 3D-толщина самой таблички */
+        0 6px 10px rgba(0, 0, 0, 0.4); /* Мягкая тень на дереве модалки */
+
+    padding: 14px 20px;
     margin: 0 0 25px 0;
-    color: #4a280d; /* Темно-коричневый читаемый текст */
+    color: #311803; /* Сделали текст ещё темнее и контрастнее для лучшей читаемости */
     font-size: 16px;
     font-weight: bold;
+
+    /* Защита от кликов: браузер поймет, что это просто текст,
+       и курсор мыши на ПК не будет превращаться в указатель */
+    pointer-events: none;
+
+    position: relative;
 }
+
+.modal-content p::before,
+/* Правая заклёпка */
+.modal-content p::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 6px;
+    height: 6px;
+    background: #7f8c8d; /* Серебристый металл */
+    border: 1px solid #2c3e50;
+    border-radius: 50%;
+    box-shadow: inset 1px 1px 1px #fff, 0 1px 2px rgba(0,0,0,0.4);
+}
+
+.modal-content p::before { left: 8px; }  /* Заклёпка слева */
+.modal-content p::after { right: 8px; }
 
 .modal-buttons {
     display: flex;
