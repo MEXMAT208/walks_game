@@ -31,6 +31,8 @@
     font-family: 'Georgia', serif;
     font-size: 20px;
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+    margin-left: 0 !important;
+    margin-right: 0 !important;
 }
 
 .level-title {
@@ -182,9 +184,14 @@
     }
 
     .top-panel {
-        flex-wrap: wrap;
-        gap: 6px;
-        padding: 10px;
+        padding-top: 45px !important;
+
+        padding-bottom: 10px !important;
+
+        /* Выравниваем элементы по нижней линии, чтобы тексты и кнопки стояли ровно */
+        align-items: flex-end !important;
+
+        box-sizing: border-box !important;
     }
 
     /* Заголовок — на всю ширину */
@@ -960,11 +967,6 @@
     box-sizing: border-box !important;
 }
 
-.top-panel {
-    width: 100% !important;
-    margin-left: 0 !important; /* Принудительно обнуляет любые отступы слева */
-    margin-right: 0 !important;
-}
 
 .level-title {
     margin-left: 10px !important;
