@@ -180,23 +180,21 @@
         width: 90%;
         padding: 10px 12px;
         gap: 10px;
-        margin-bottom: 15px;
+        margin-bottom: 10px;
     }
 
     .top-panel {
-        padding-top: 45px !important;
+        padding-top: 45px !important; /* Безопасная зона под чёлку и плашку ВК */
         padding-bottom: 12px !important;
         padding-left: 10px !important;
         padding-right: 10px !important;
         box-sizing: border-box !important;
 
         display: flex !important;
-        flex-wrap: wrap !important;
-
-        /* ИСПРАВЛЕНИЕ: Центрируем ВСЕ элементы (и заголовок, и кнопки) строго по центру экрана телефона */
-        justify-content: center !important;
-        align-items: center !important;
-        gap: 12px !important; /* Удобное расстояние между кнопками во втором ряду */
+        flex-direction: column !important; /* Жестко переключаем в режим колонки: ряд 1 и ряд 2 */
+        align-items: center !important;    /* Центрируем оба ряда строго по горизонтали */
+        justify-content: flex-start !important;
+        gap: 10px !important;             /* Зазор между верхним названием и нижними кнопками */
 
         height: auto !important;
         width: 100% !important;
@@ -205,15 +203,42 @@
     /* Заголовок — на всю ширину */
     .level-title {
         width: 100% !important;
-        text-align: center !important;
+        text-align: left !important;
         font-size: 20px !important;
-        order: -1 !important;
-        margin: 0 0 5px 0 !important;
-        white-space: nowrap !important;
-
-        /* СБРОС: Выжигаем любые ПК-отступы, которые могли сдвигать текст */
+        margin: 0 !important;
         padding: 0 !important;
+        white-space: nowrap !important;
         position: static !important;
+    }
+
+    .top-panel > div,
+    .top-panel .left-side,
+    .top-panel .right-side,
+    .top-panel .buttons-wrapper {
+        display: flex !important;
+        flex-direction: row !important; /* Элементы внутри обёрток встают в линию */
+        justify-content: center !important; /* Центрируем их */
+        align-items: center !important;
+        gap: 12px !important;
+
+        width: auto !important; /* Сбрасываем ширину 100%, чтобы блоки не расталкивало */
+        margin: 0 auto !important; /* Выравниваем по центру */
+        padding: 0 !important;
+    }
+
+    /* ЖЕСТКИЙ СБРОС СДВИГА ДЛЯ ВСЕХ ЭЛЕМЕНТОВ (Кнопки и Ходы) */
+    .top-panel button,
+    .top-panel div,
+    .top-panel .panel-btn,
+    .top-panel .moves-info {
+        flex-shrink: 0 !important;
+        position: static !important;
+
+        /* Выжигаем автоматические ПК-отступы, которые утягивали элементы вправо */
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
     }
 
     /* Подсказка — на всю ширину */
@@ -234,21 +259,6 @@
 
         /* ✅ Ограничиваем ширину, чтобы текст переносился */
         max-width: 100%;            /* Или фиксированную ширину, например 300px */
-    }
-
-    .top-panel > button,
-    .top-panel > div,
-    .top-panel .panel-btn,
-    .top-panel .moves-info {
-        flex-shrink: 0 !important;
-        position: static !important;
-
-        /* КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Выжигаем margin-left: auto или float,
-           которые утягивали кнопки к правому краю экрана! */
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-        margin-top: 0 !important;
-        margin-bottom: 0 !important;
     }
 
     /* Группа управления — вниз */
