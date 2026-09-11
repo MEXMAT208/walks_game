@@ -185,21 +185,35 @@
 
     .top-panel {
         padding-top: 45px !important;
-
-        padding-bottom: 10px !important;
-
-        /* Выравниваем элементы по нижней линии, чтобы тексты и кнопки стояли ровно */
-        align-items: flex-end !important;
-
+        padding-bottom: 12px !important;
+        padding-left: 10px !important;
+        padding-right: 10px !important;
         box-sizing: border-box !important;
+
+        display: flex !important;
+        flex-wrap: wrap !important;
+
+        /* ИСПРАВЛЕНИЕ: Центрируем ВСЕ элементы (и заголовок, и кнопки) строго по центру экрана телефона */
+        justify-content: center !important;
+        align-items: center !important;
+        gap: 12px !important; /* Удобное расстояние между кнопками во втором ряду */
+
+        height: auto !important;
+        width: 100% !important;
     }
 
     /* Заголовок — на всю ширину */
     .level-title {
-        width: 100%;
-        text-align: center;
-        font-size: 20px;
-        order: 1;
+        width: 100% !important;
+        text-align: center !important;
+        font-size: 20px !important;
+        order: -1 !important;
+        margin: 0 0 5px 0 !important;
+        white-space: nowrap !important;
+
+        /* СБРОС: Выжигаем любые ПК-отступы, которые могли сдвигать текст */
+        padding: 0 !important;
+        position: static !important;
     }
 
     /* Подсказка — на всю ширину */
@@ -220,6 +234,21 @@
 
         /* ✅ Ограничиваем ширину, чтобы текст переносился */
         max-width: 100%;            /* Или фиксированную ширину, например 300px */
+    }
+
+    .top-panel > button,
+    .top-panel > div,
+    .top-panel .panel-btn,
+    .top-panel .moves-info {
+        flex-shrink: 0 !important;
+        position: static !important;
+
+        /* КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ: Выжигаем margin-left: auto или float,
+           которые утягивали кнопки к правому краю экрана! */
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
     }
 
     /* Группа управления — вниз */
