@@ -197,7 +197,7 @@
     /* Заголовок — на всю ширину */
     .level-title {
         width: 100%;
-        text-align: left;
+        text-align: center;
         font-size: 20px;
         order: 1;
     }
