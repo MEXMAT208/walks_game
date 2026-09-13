@@ -1,5 +1,6 @@
 let lockedToastTimer = null;
 let completed_levels = [];
+let unlocked_premium_levels = [];
 let lastAdShowTime = Date.now();
 
 let squares = []
@@ -11,7 +12,7 @@ let num_selected
 let in_move
 let curr_level
 let level_data
-let currentLang = 'en';
+let currentLang = 'ru';
 
 let currentPage = 0;
 const levelsPerPage = 15; // Сколько уровней показывать на одной странице (4x3 = 12)
@@ -36,55 +37,61 @@ const level2level = {
 
 const MILESTONE_MESSAGES = {
     ru: {
-        5:  '⭐ Отличная работа! Открыты уровни 6-10!',
-        10: '⭐ Потрясающе! Открыты уровни 11-15!',
-        15: '⭐ Невероятно! Открыты уровни 16-25!'
+        5:  '\u{2B50} Отличная работа! Открыты уровни 6-10!',
+        10: '\u{2B50} Потрясающе! Открыты уровни 11-15!',
+        15: '\u{2B50} Невероятно! Открыты уровни 16-25!'
     },
     en: {
-        5:  '⭐ Great job! Levels 6-10 are open!',
-        10: '⭐ Amazing! Levels 11-15 are open!',
-        15: '⭐ Unbelievable! Levels 16-25 are open!'
+        5:  '\u{2B50} Great job! Levels 6-10 are open!',
+        10: '\u{2B50} Amazing! Levels 11-15 are open!',
+        15: '\u{2B50} Unbelievable! Levels 16-25 are open!'
     }
 };
 
 const translations = {
     ru: {
+        title: "Фишки",
         level: "Уровень ",
         completed: "Пройдено: ",
         moves: "Осталось ходов: ",
-        win: "🎉 Уровень пройден!",
+        win: "\u{1F389} Уровень пройден!",
         win_descr: "Отличная работа!",
-        trap: "💀 Вы попали в ловушку!",
+        trap: "\u{1F480} Вы попали в ловушку!",
         trap_descr: "Попробуйте обойти опасное место",
         lose: "Ходы закончились!",
         lose_descr: "Попробуйте ещё раз",
-        to_menu: "🏠 В меню",
-        retry: "🔄 Попробовать снова",
+        to_menu: "\u{1F3E0} В меню",
+        retry: "\u{1F504} Попробовать снова",
         next: "Дальше →",
-        random_level: "🎞 Случайный уровень",
+        random_level: "\u{1F39E} Случайный уровень",
         generating: "Генерируем уровень",
         random_level_text: "Случайный уровень",
         again: "Уровень пройден снова!",
-        toggle: (n) => `Пройдите уровень <strong>${n}</strong>, чтобы открыть этот`
+        blocked: "\u{1F512} Уровни заблокированы",
+        toggle: (n) => `Пройдите уровень <strong>${n}</strong>, чтобы открыть этот`,
+        prem: (a, b) => `Посмотреть рекламу, чтобы открыть уровни ${a} — ${b}?`
     },
     en: {
+        title: "Chips",
         level: "Level ",
         completed: "Completed: ",
         moves: "Moves left: ",
-        win: "🎉 Level completed!",
+        win: "\u{1F389} Level completed!",
         win_descr: "Great job!",
-        trap: "💀 You're trapped",
+        trap: "\u{1F480} You're trapped",
         trap_descr: "Try to avoid a dangerous place",
         lose: "The moves are over!",
         lose_descr: "Try again",
-        to_menu: "🏠 To menu",
-        retry: "🔄 Try again",
+        to_menu: "\u{1F3E0} To menu",
+        retry: "\u{1F504} Try again",
         next: "Next →",
-        random_level: "🎞 Random level",
+        random_level: "\u{1F39E} Random level",
         generating: "Generate level",
         random_level_text: "Random level",
         again: "Level is completed again!",
-        toggle: (n) => `Complet the level <strong>${n}</strong> to open this`
+        blocked: "\u{1F512} Levels Locked",
+        toggle: (n) => `Complete the level <strong>${n}</strong> to open this`,
+        prem: (a, b) => `Watch an ad to unlock levels ${a} — ${b}?`
     }
 };
 
@@ -104,6 +111,12 @@ function levelCompleteFireworks() {
         spread: 55,
         origin: { x: 1, y: 0.8 } // Правый нижний угол
     });
+}
+
+function isVKEnvironment() {
+    const urlParams = new URLSearchParams(window.location.search);
+    // Если в адресе есть vk_user_id или vk_platform, значит мы внутри ВК
+    return urlParams.has('vk_user_id') || urlParams.has('vk_platform');
 }
 
 function showLockedLevelToast(requiredLevel) {
@@ -127,7 +140,7 @@ function showLockedLevelToast(requiredLevel) {
     }, 2500);
 }
 
-// Измененная логика состояний под Яндекс
+
 function get_level_state(level_id) {
     if (completed_levels.includes(level_id)) {
         return 'completed';
@@ -139,7 +152,11 @@ function get_level_state(level_id) {
 
     // Уровни выше 25 требуют премиум-статуса (или просмотра рекламы)
     if (level_id > last_free_level) {
-        return 'premium';
+        if (unlocked_premium_levels.includes(level_id)) {
+            return 'available'
+        } else {
+            return 'premium';
+        }
     }
 
     if (completed_levels.includes(level2level[level_id])) {
@@ -157,6 +174,7 @@ function playRandomWithAds() {
     let isAdSuccessfullyWatched = false; // Флаг: досмотрено ли видео
 
     console.log('1. Запуск Rewarded видео VK и параллельной генерации...');
+    lastAdShowTime = Date.now();
 
     // ШАГ А: Запускаем генерацию уровня в фоне.
     // Используем setTimeout(..., 0), чтобы тяжелые вычисления не заблокировали
@@ -227,41 +245,87 @@ function playRandomWithAds() {
 
 
 function unlockPremiumLevelWithAds(level_id) {
-    vkBridge.send('VKWebAppShowNativeAds', { ad_format: 'reward' })
-        .then(data => {
-            if (data && data.result == true) {
-                console.log('Видео досмотрено! Открываем премиум уровень...');
-                // Игрок досмотрел рекламу до конца — запускаем уровень
-                switchToGameScreen(level_id);
-            } else {
-                console.log('Игрок закрыл видео раньше времени. Уровень остается заблокирован.');
-                switchToMenuScreen();
-            }
-        })
-        .catch(error => {
-            console.error('Ошибка при показе Rewarded рекламы в VK:', error);
+    switchToGameScreen(level_id)
+    const modal = document.getElementById('premium-unlock-modal');
 
-            // Проверяем, почему сработал .catch()
-            const errorReason = error && error.error_data ? error.error_data.error_reason : '';
+    const startRange = Math.floor((level_id - 1) / 5) * 5 + 1;
+    const endRange = startRange + 4;
 
-            if (errorReason === 'User denied' || errorReason === 'Operation denied by user') {
-                // Игрок САМ осознанно закрыл рекламу крестиком. Награду НЕ ДАЕМ!
-                console.log('Игрок отменил просмотр. Уровень остается закрытым.');
-                document.getElementById('loading-overlay').classList.add('hidden');
-                switchToMenuScreen();
-            } else {
-                // Сюда мы попадем, только если упал интернет или у ВК нет рекламы (No Fill).
-                // Только в этом случае ВК требует пустить игрока бесплатно, чтобы пройти модерацию.
-                console.log('Техническая ошибка сети или No Fill. Пускаем бесплатно по правилам ВК.');
-                isAdSuccessfullyWatched = true;
+    if (modal) {
+        console.log("Элемент найден в HTML! Переключаем display на flex...");
+        modal.style.setProperty('display', 'flex', 'important'); // Принудительное включение
 
-                if (prepared_level_data) {
-                    startGameWithPreparedData();
+        // Обновляем текст внутри вывески
+        const modalText = document.getElementById('unlock-modal-text');
+        if (modalText) {
+            modalText.innerText = translations[currentLang]['prem'](startRange, endRange);
+        }
+    } else {
+        console.error("КРИТИЧЕСКАЯ ОШИБКА: Элемент #premium-unlock-modal НЕ НАЙДЕН в HTML файле!");
+    }
+
+    const close_btn = document.getElementById('btn-unlock-close');
+    if (close_btn) {
+        close_btn.onclick = () => {
+            if (modal) modal.style.display = 'none'; // Прячем окно обратно
+            switchToMenuScreen();
+        };
+    }
+
+    const watch_btn = document.getElementById('btn-unlock-watch')
+    watch_btn.onclick = () => {
+        lastAdShowTime = Date.now();
+        if (modal) modal.style.display = 'none';
+
+        vkBridge.send('VKWebAppShowNativeAds', { ad_format: 'reward' })
+            .then(data => {
+                if (modal) modal.style.display = 'none';
+
+                if (data && data.result == true) {
+                    console.log('Видео досмотрено! Открываем премиум уровни');
+
+                    for (let i = startRange; i <= endRange; i++) {
+                        // Проверяем, чтобы уровень не добавился дважды
+                        if (!unlocked_premium_levels.includes(i)) {
+                            unlocked_premium_levels.push(i);
+                        }
+                    }
+
+                    vkBridge.send('VKWebAppStorageSet', {
+                            key: 'unlocked_premium_levels',
+                            value: JSON.stringify(unlocked_premium_levels)
+                    }).catch(e => console.error("Ошибка сохранения в Storage:", e));
+
+                    switchToGameScreen(level_id);
                 } else {
-                    console.log('Ждем фоновую генерацию после ошибки сети...');
+                    console.log('Игрок закрыл видео раньше времени. Уровни остаются заблокированы.');
+                    switchToMenuScreen();
                 }
-            }
-        });
+            })
+            .catch(error => {
+                if (modal) modal.style.display = 'none';
+                console.error('Ошибка при показе Rewarded рекламы в VK:', error);
+
+                // Проверяем, почему сработал .catch()
+                const errorReason = error && error.error_data ? error.error_data.error_reason : '';
+
+                if (errorReason === 'User denied' || errorReason === 'Operation denied by user') {
+                    // Игрок САМ осознанно закрыл рекламу крестиком. Награду НЕ ДАЕМ!
+                    console.log('Игрок отменил просмотр. Уровни остаются закрытыми.');
+                    switchToMenuScreen();
+                } else {
+                    // ТЕХНИЧЕСКИЙ СБОЙ (No Fill / Нет интернета). Пускаем бесплатно по правилам ВК!
+                    console.log('Фолбэк: Ошибка рекламной сети. Открываем уровни бесплатно.');
+                    for (let i = startRange; i <= endRange; i++) {
+                        if (!unlocked_premium_levels.includes(i)) {
+                            unlocked_premium_levels.push(i);
+                        }
+                    }
+                    clear_level();
+                    switchToGameScreen(level_id);
+                }
+            });
+    }
 }
 
 function renderLevels() {
@@ -303,11 +367,7 @@ function renderLevels() {
                 return;
             }
 
-            if (state == 'completed') {
-                launchLevel(levelNum);
-            } else {
-                showPhoto(levelNum)
-            }
+            showPhoto(levelNum)
         });
 
         grid.appendChild(btn);
@@ -334,9 +394,6 @@ function updateStats(n, m) {
     }
 }
 
-function launchLevel(level_id) {
-    switchToGameScreen(level_id)
-}
 
 function switchToGameScreen(levelId, pregeneratedData = null) {
     // 1. Прячем экран меню, показываем экран игры
@@ -621,7 +678,13 @@ async function markLevelAsCompleted(levelId) {
         console.log(completed_levels);
     }
 
-    // 2. Отправляем обновленный массив в облачную базу Яндекса
+    if (!isVKEnvironment()) {
+        console.log("Локальный тест: ВК не обнаружен. Сохраняем прогресс в localStorage.");
+        localStorage.setItem('completed_levels_list', JSON.stringify(completed_levels));
+        return; // Завершаем функцию, не допуская вызова зависающего vkBridge
+    }
+
+    // 2. Отправляем обновленный массив в облачную базу VK
     try {
         // 1. Сохраняем в облако VK (массив обязательно переводим в строку)
         await vkBridge.send('VKWebAppStorageSet', {
@@ -630,7 +693,7 @@ async function markLevelAsCompleted(levelId) {
         });
         console.log("Уровень успешно сохранен в облако VK.");
     } catch (e) {
-        console.error("Ошибка сохранения прогресса в Яндекс:", e);
+        console.error("Ошибка сохранения прогресса в VK:", e);
     }
 
 }
@@ -745,7 +808,14 @@ async function show_win_modal() {
     } else {
         first_time = !completed_levels.includes(parseInt(curr_level));
         await markLevelAsCompleted(curr_level)
-        updateVKLeaderboard(completed_levels.length)
+
+        try {
+            if (typeof updateVKLeaderboard === 'function') {
+                updateVKLeaderboard(completed_levels.length);
+            }
+        } catch (leaderboardError) {
+            console.warn("Локальный тест: Лидерборд VK недоступен вне платформы.", leaderboardError);
+        }
     }
 
     if (first_time) {
@@ -785,7 +855,11 @@ function next_level() {
         playRandomWithAds()
     } else {
         curr_level += 1
-        if (curr_level <= last_free_level || completed_levels.includes(curr_level)) {
+        if (
+            curr_level <= last_free_level ||
+            unlocked_premium_levels.includes(curr_level) ||
+            completed_levels.includes(curr_level)
+        ) {
             showPhoto(curr_level)
         } else {
             unlockPremiumLevelWithAds(curr_level)
@@ -1091,6 +1165,28 @@ async function Start() {
             if (localData) {
                 completed_levels = JSON.parse(localData);
             }
+        }
+
+        try {
+            const storageData = await vkBridge.send('VKWebAppStorageGet', {
+                keys: ['unlocked_premium_levels']
+            });
+
+            if (storageData && storageData.keys && storageData.keys[0] && storageData.keys[0].value) {
+                const rawValue = storageData.keys[0].value;
+                const parsedData = JSON.parse(rawValue);
+
+                if (Array.isArray(parsedData)) {
+                    unlocked_premium_levels = parsedData;
+                    console.log('Успешно загружены открытые уровни из VK Storage:', unlocked_premium_levels);
+                }
+            } else {
+                console.log("В VK Storage нет открытых премиум уровней, массив пуст.");
+                unlocked_premium_levels = [];
+            }
+        } catch (error) {
+            console.error('Ошибка при первоначальной загрузке из VK Storage:', error);
+            unlocked_premium_levels = []; // Фолбэк при сбое сети
         }
 
     } catch (e) {

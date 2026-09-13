@@ -32,34 +32,34 @@
 
     <!-- ================= БЛОК ГЛАВНОГО МЕНЮ ================= -->
     <div id="screen-menu" class="menu-container">
-        <h1 class="game-title">Walks</h1>
+        <h1 class="game-title">Фишки</h1>
         <div class="player-stats">
             <span class="stat" id="cup">
-                🏆 <span data-lang-key="completed">Пройдено: </span>
+                &#x1F3C6; <span data-lang-key="completed">Пройдено: </span>
                 <strong id="completed-count">0 / 50</strong>
             </span>
         </div>
 
         <!-- КОНТЕЙНЕР ДЛЯ СТРАНИЦ УРОВНЕЙ -->
         <div class="pagination-wrapper">
-            <button id="prev-page-btn" class="page-nav-btn">◀</button>
+            <button id="prev-page-btn" class="page-nav-btn">&#x25C0;</button>
 
             <!-- Сюда JS будет выводить по 12 уровней за раз -->
             <div class="levels-grid" id="levels-grid">
                 <div class="loading">Загрузка...</div>
             </div>
 
-            <button id="next-page-btn" class="page-nav-btn">▶</button>
+            <button id="next-page-btn" class="page-nav-btn">&#x25B6;</button>
         </div>
 
         <button id="random-btn" class="random-btn" data-lang-key="random_level">
-            🎞 Случайный уровень
+            &#x1F39E; Случайный уровень
         </button>
     </div>
 
     <!-- Тост для заблокированных уровней (общий) -->
     <div class="locked-toast" id="lockedToast">
-        <span class="locked-toast-icon">🔒</span>
+        <span class="locked-toast-icon">&#x1F512;</span>
         <span class="locked-toast-text" id="lockedToastText">Пройдите предыдущий уровень</span>
     </div>
 
@@ -76,9 +76,9 @@
                     <span data-lang-key="moves">Осталось ходов: </span>
                     <strong id="moves-count">0</strong>
                 </span>
-                <button id="btn-sound" class="panel-btn btn-sound">🔊</button>
-                <button id="btn-restart" class="panel-btn btn-restart">🔄</button>
-                <button id="btn-to-menu" class="panel-btn btn-to-menu">🏠</button>
+                <button id="btn-sound" class="panel-btn btn-sound">&#x1F50A;</button>
+                <button id="btn-restart" class="panel-btn btn-restart">&#x1F504;</button>
+                <button id="btn-to-menu" class="panel-btn btn-to-menu">&#x1F3E0;</button>
             </div>
         </div>
 
@@ -91,12 +91,12 @@
         <!-- Модальные окна (победа, проигрыш, ловушка) -->
         <div id="win-modal" class="modal" style="display: none;">
             <div class="modal-content">
-                <h2 data-lang-key="win">🎉 Уровень пройден!</h2>
+                <h2 data-lang-key="win">&#x1F389; Уровень пройден!</h2>
                 <p id="win-message" data-lang-key="win_descr">Отличная работа!</p>
                 <div class="modal-buttons">
-                    <button id="btn-win-menu" class="btn btn-menu" data-lang-key="to_menu">🏠 В меню</button>
-                    <button id="btn-win-replay" class="btn btn-retry" data-lang-key="retry">🔄 Попробовать снова</button>
-                    <button id="btn-win-next" class="btn btn-next" data-lang-key="next">Дальше →</button>
+                    <button id="btn-win-menu" class="btn btn-menu" data-lang-key="to_menu">&#x1F3E0; В меню</button>
+                    <button id="btn-win-replay" class="btn btn-retry" data-lang-key="retry">&#x1F504; Попробовать снова</button>
+                    <button id="btn-win-next" class="btn btn-next" data-lang-key="next">Дальше &#x2192;</button>
                 </div>
             </div>
         </div>
@@ -112,22 +112,45 @@
                 </h2>
                 <p data-lang-key="lose_descr"> Попробуйте ещё раз</p>
                 <div class="modal-buttons">
-                    <button id="btn-lose-retry" class="btn btn-retry" data-lang-key="retry">🔄 Попробовать снова</button>
-                    <button id="btn-lose-menu" class="btn btn-menu" data-lang-key="to_menu">🏠 В меню</button>
+                    <button id="btn-lose-retry" class="btn btn-retry" data-lang-key="retry">&#x1F504; Попробовать снова</button>
+                    <button id="btn-lose-menu" class="btn btn-menu" data-lang-key="to_menu">&#x1F3E0; В меню</button>
                 </div>
             </div>
         </div>
 
         <div id="trap-modal" class="modal" style="display: none;">
             <div class="modal-content trap-content">
-                <h2 data-lang-key="trap">💀 Вы попали в ловушку!</h2>
+                <h2 data-lang-key="trap">&#x1F480; Вы попали в ловушку!</h2>
                 <p data-lang-key="trap_descr">Попробуйте обойти опасное место</p>
                 <div class="modal-buttons">
-                    <button id="btn-trap-retry" class="btn btn-retry" data-lang-key="retry">🔄 Попробовать снова</button>
-                    <button id="btn-trap-menu" class="btn btn-menu" data-lang-key="to_menu">🏠 В меню</button>
+                    <button id="btn-trap-retry" class="btn btn-retry" data-lang-key="retry">&#x1F504; Попробовать снова</button>
+                    <button id="btn-trap-menu" class="btn btn-menu" data-lang-key="to_menu">&#x1F3E0; В меню</button>
                 </div>
             </div>
         </div>
+
+        <!-- Модальное окно пакетного открытия уровней -->
+        <div id="premium-unlock-modal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <h2 id="unlock-modal-title" data-lang-key="blocked">&#x1F512; Уровни заблокированы</h2>
+
+                <!-- Табличка-вывеска с текстом -->
+                <p id="unlock-modal-text" data-lang-key="prem">Посмотреть рекламу, чтобы открыть уровни 26 — 30?</p>
+
+                <div class="modal-buttons">
+                    <!-- Кнопка "В меню" -->
+                    <button id="btn-unlock-close" class="btn btn-menu">
+                        <span>В меню</span>
+                    </button>
+
+                    <!-- Главная сочная кнопка просмотра видео -->
+                    <button id="btn-unlock-watch" class="btn btn-next">
+                        <span>Смотреть рекламу</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <div id="loading-overlay" class="loading-overlay hidden">
