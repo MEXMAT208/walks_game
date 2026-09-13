@@ -27,6 +27,7 @@ const CELL_FINISH = 2;
 const CELL_WALL = -1;
 const CELL_TRAP = 3;
 
+const advGap = 90000
 
 const level2level = {
     6: 5, 7: 5, 8: 5, 9: 5, 10: 5,
@@ -657,7 +658,7 @@ function showPhoto(level_id) {
     let currentTime = Date.now();
 
     // 60000 миллисекунд = 2 минуты
-    if (currentTime - lastAdShowTime > 60000) {
+    if (currentTime - lastAdShowTime > advGap) {
         lastAdShowTime = currentTime; // Обновляем время таймера
 
         // Вызываем рекламу VK
