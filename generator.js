@@ -239,7 +239,7 @@ function generate_level() {
 
     for (var i = 1; i < 3; i ++) {
         let variant = Math.floor(Math.random() * structures.length);
-        let [field, moves] = try_generate_level(structures[variant], 40, 1);
+        let [field, moves] = try_generate_level(structures[variant], 50, 1);
         if (field !== null) return {field: field, moves: moves};
     }
 
