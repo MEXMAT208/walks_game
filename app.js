@@ -292,10 +292,23 @@ function unlockPremiumLevelWithAds(level_id) {
                         }
                     }
 
+                    // Сохраняем массив в облако VK Storage
                     vkBridge.send('VKWebAppStorageSet', {
-                            key: 'unlocked_premium_levels',
-                            value: JSON.stringify(unlocked_premium_levels)
-                    }).catch(e => console.error("Ошибка сохранения в Storage:", e));
+                        key: 'unlocked_premium_levels',
+                        value: JSON.stringify(unlocked_premium_levels)
+                    })
+                    .then(() => {
+                        console.log("Данные успешно синхронизированы с облаком VK Storage!");
+                        // Дублируем и в localStorage для максимальной надежности
+                        localStorage.setItem('unlocked_premium_levels', JSON.stringify(unlocked_premium_levels));
+                    })
+                    .catch(e => {
+                        console.error("Ошибка сохранения в VK Storage. Включаем локальный бэкап:", e);
+
+                        /* ЖЕЛЕЗНЫЙ БЭКАП: если сервера ВК лежат, намертво сохраняем
+                           открытые уровни в локальную память устройства! */
+                        localStorage.setItem('unlocked_premium_levels', JSON.stringify(unlocked_premium_levels));
+                    });
 
                     switchToGameScreen(level_id);
                 } else {
