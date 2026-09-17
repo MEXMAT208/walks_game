@@ -183,18 +183,19 @@
         margin-bottom: 10px;
     }
 
-    .top-panel {
-        padding-top: 45px !important; /* Безопасная зона под чёлку и плашку ВК */
-        padding-bottom: 12px !important;
-        padding-left: 10px !important;
-        padding-right: 10px !important;
+    .top-panel, #top_panel {
+        /* ЖЕСТКИЙ СДВИГ ВНИЗ: 75px полностью освободят место под плашку ВК и челку смартфона */
+        padding-top: 75px !important;
+        padding-bottom: 15px !important;
+        padding-left: 15px !important;
+        padding-right: 15px !important;
         box-sizing: border-box !important;
 
         display: flex !important;
-        flex-direction: column !important; /* Жестко переключаем в режим колонки: ряд 1 и ряд 2 */
-        align-items: center !important;    /* Центрируем оба ряда строго по горизонтали */
+        flex-direction: column !important; /* Выстраиваем элементы строго в два этажа */
+        align-items: center !important;    /* Центрируем оба этажа по горизонтали */
         justify-content: flex-start !important;
-        gap: 10px !important;             /* Зазор между верхним названием и нижними кнопками */
+        gap: 12px !important;              /* Расстояние между этажом названия и этажом кнопок */
 
         height: auto !important;
         width: 100% !important;
@@ -203,12 +204,15 @@
     /* Заголовок — на всю ширину */
     .level-title {
         width: 100% !important;
-        text-align: left !important;
-        font-size: 20px !important;
+        text-align: center !important; /* Возвращаем center вместо left, чтобы убрать из-под часов! */
+        font-size: 22px !important;
+        font-weight: bold !important;
         margin: 0 !important;
         padding: 0 !important;
         white-space: nowrap !important;
         position: static !important;
+        color: #ffffff !important;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.5) !important;
     }
 
     .top-panel > div,
@@ -216,13 +220,13 @@
     .top-panel .right-side,
     .top-panel .buttons-wrapper {
         display: flex !important;
-        flex-direction: row !important; /* Элементы внутри обёрток встают в линию */
-        justify-content: center !important; /* Центрируем их */
+        flex-direction: row !important;      /* Кнопки встают в одну аккуратную линию */
+        justify-content: center !important;  /* Центрируем этот ряд на экране смартфона */
         align-items: center !important;
-        gap: 12px !important;
+        gap: 10px !important;                /* Комфортный зазор между кнопками для пальца */
 
-        width: auto !important; /* Сбрасываем ширину 100%, чтобы блоки не расталкивало */
-        margin: 0 auto !important; /* Выравниваем по центру */
+        width: auto !important;
+        margin: 0 auto !important;
         padding: 0 !important;
     }
 
