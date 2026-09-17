@@ -292,22 +292,20 @@ function unlockPremiumLevelWithAds(level_id) {
                         }
                     }
 
-                    // Сохраняем массив в облако VK Storage
+                    localStorage.setItem('unlocked_premium_levels', JSON.stringify(unlocked_premium_levels));
+                    console.log("Локальный бэкап сохранен в localStorage устройства.");
+
+                    // 2. СИНХРОНИЗАЦИЯ С ОБЛАКОМ: отправляем данные на сервера ВКонтакте в фоне
                     vkBridge.send('VKWebAppStorageSet', {
                         key: 'unlocked_premium_levels',
                         value: JSON.stringify(unlocked_premium_levels)
                     })
                     .then(() => {
                         console.log("Данные успешно синхронизированы с облаком VK Storage!");
-                        // Дублируем и в localStorage для максимальной надежности
-                        localStorage.setItem('unlocked_premium_levels', JSON.stringify(unlocked_premium_levels));
                     })
                     .catch(e => {
-                        console.error("Ошибка сохранения в VK Storage. Включаем локальный бэкап:", e);
-
-                        /* ЖЕЛЕЗНЫЙ БЭКАП: если сервера ВК лежат, намертво сохраняем
-                           открытые уровни в локальную память устройства! */
-                        localStorage.setItem('unlocked_premium_levels', JSON.stringify(unlocked_premium_levels));
+                        // Если сервера ВК перегружены, локальный бэкап (Шаг 1) подстрахует сессию
+                        console.warn("Сетевой сбой ВК. Облако недоступно, но локальный прогресс в безопасности:", e);
                     });
 
                     switchToGameScreen(level_id);
@@ -691,24 +689,20 @@ async function markLevelAsCompleted(levelId) {
         console.log(completed_levels);
     }
 
-    if (!isVKEnvironment()) {
-        console.log("Локальный тест: ВК не обнаружен. Сохраняем прогресс в localStorage.");
-        localStorage.setItem('completed_levels_list', JSON.stringify(completed_levels));
-        return; // Завершаем функцию, не допуская вызова зависающего vkBridge
-    }
+    localStorage.setItem('completed_levels_list', JSON.stringify(completed_levels));
+    console.log("Локальный бэкап сохранен в localStorage смартфона.");
 
-    // 2. Отправляем обновленный массив в облачную базу VK
+    // 3. СИНХРОНИЗАЦИЯ: Фоновым асинхронным запросом отправляем данные в облако ВК
     try {
-        // 1. Сохраняем в облако VK (массив обязательно переводим в строку)
         await vkBridge.send('VKWebAppStorageSet', {
             key: 'completed_levels_list',
             value: JSON.stringify(completed_levels)
         });
-        console.log("Уровень успешно сохранен в облако VK.");
+        console.log("Уровень успешно синхронизирован с облаком VK Storage.");
     } catch (e) {
-        console.error("Ошибка сохранения прогресса в VK:", e);
+        // Если сеть ВК упала, наш Шаг 2 уже подстраховал игрока, и прогресс не пропадет
+        console.warn("Сетевой сбой ВК. Облако недоступно, но локальный прогресс в безопасности:", e);
     }
-
 }
 
 function clear_level() {
