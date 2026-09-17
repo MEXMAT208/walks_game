@@ -1160,18 +1160,32 @@ async function Start() {
             // Гонка: если ВК не отвечает за 300мс, Promise.race улетает в блок catch
             const storageData = await Promise.race([
                 vkBridge.send('VKWebAppStorageGet', { keys: ['completed_levels_list'] }),
-                timeoutProvider(300)
+                timeoutProvider(1000)
             ]);
 
-            if (storageData && storageData.keys && storageData.keys[0] && storageData.keys[0].value) {
-                const rawValue = storageData.keys[0].value;
+            let rawValue = null;
+
+            if (storageData && storageData.keys && Array.isArray(storageData.keys)) {
+                // Ищем объект с нужным ключом внутри массива (защита от смены индексов на Android)
+                const targetKey = storageData.keys.find(item => item.key === 'completed_levels_list');
+                if (targetKey && targetKey.value) {
+                    rawValue = targetKey.value;
+                }
+            }
+
+            if (rawValue) {
                 const parsedData = JSON.parse(rawValue);
                 if (Array.isArray(parsedData)) {
                     completed_levels = parsedData;
                     console.log("Успешно загружен прогресс из VK Cloud Storage:", completed_levels);
                 }
             } else {
-                throw new Error("Empty VK Cloud data");
+                console.log("В VK Cloud Storage нет сохраненного прогресса, пробуем localStorage");
+                const localData = localStorage.getItem('completed_levels_list');
+                if (localData) {
+                    completed_levels = JSON.parse(localData);
+                    console.log("Загружен локальный прогресс из localStorage:", completed_levels);
+                }
             }
         } catch (vkStorageError) {
             console.warn("ВК Cloud задерживается или вернул ошибку. Экстренно включаем локальный бэкап:", vkStorageError.message);
@@ -1188,18 +1202,27 @@ async function Start() {
 
             const storageData = await Promise.race([
                 vkBridge.send('VKWebAppStorageGet', { keys: ['unlocked_premium_levels'] }),
-                timeoutProvider(300)
+                timeoutProvider(1000)
             ]);
 
-            if (storageData && storageData.keys && storageData.keys[0] && storageData.keys[0].value) {
-                const rawValue = storageData.keys[0].value;
+            let rawValue = null;
+            if (storageData && storageData.keys && Array.isArray(storageData.keys)) {
+                // Безопасно ищем нужный ключ в массиве ответов ВК
+                const targetKey = storageData.keys.find(item => item.key === 'unlocked_premium_levels');
+                if (targetKey && targetKey.value) {
+                    rawValue = targetKey.value;
+                }
+            }
+
+            if (rawValue) {
                 const parsedData = JSON.parse(rawValue);
                 if (Array.isArray(parsedData)) {
                     unlocked_premium_levels = parsedData;
                     console.log('Успешно загружены открытые уровни из VK Storage:', unlocked_premium_levels);
                 }
             } else {
-                throw new Error("Empty VK Premium data");
+                console.log("В VK Storage нет открытых премиум уровней, массив пуст.");
+                unlocked_premium_levels = [];
             }
         } catch (error) {
             console.warn('ВК Cloud по премиум-пакетам задерживается. Включаем локальный бэкап:', error.message);
