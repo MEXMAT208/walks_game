@@ -1134,119 +1134,110 @@ function timeoutProvider(ms) {
 
 async function Start() {
     try {
-        // 1. Определение языка из URL-параметров VK
+        // 1. Автоматическое определение языка
         const urlParams = new URLSearchParams(window.location.search);
         const vkLang = urlParams.get('vk_language');
-
-        if (vkLang) {
-            currentLang = vkLang;
-            console.log("Язык платформы VK определен автоматически:", currentLang);
-        } else {
-            console.log("Параметр vk_language не найден, используем язык по умолчанию:", currentLang);
-        }
-
+        if (vkLang) { currentLang = vkLang; }
         initLocalization(currentLang);
 
-        // 2. Получение пройденных уровней с жестким лимитом ожидания в 300 мс!
-        try {
-            console.log("Запрос completed_levels_list из VK Cloud Storage...");
+        // ПЕРЕМЕННЫЕ-ФЛАГИ: есть ли вообще ключи в облаке ВК?
+        let hasProgressInCloud = false;
+        let hasPremiumInCloud = false;
 
-            // Гонка: если ВК не отвечает за 300мс, Promise.race улетает в блок catch
-            const storageData = await Promise.race([
-                vkBridge.send('VKWebAppStorageGet', { keys: ['completed_levels_list'] }),
-                timeoutProvider(1000)
+        // 2. БЫСТРАЯ СКАУТ-ПРОВЕРКА КЛЮЧЕЙ В ОБЛАКЕ
+        try {
+            console.log("Запрос списка ключей из VK Storage...");
+            const keysData = await Promise.race([
+                vkBridge.send('VKWebAppStorageGetKeys', { count: 20, offset: 0 }),
+                timeoutProvider(800) // Даем 800мс на ответ
             ]);
 
-            let rawValue = null;
-
-            if (storageData && storageData.keys && Array.isArray(storageData.keys)) {
-                // Ищем объект с нужным ключом внутри массива (защита от смены индексов на Android)
-                const targetKey = storageData.keys.find(item => item.key === 'completed_levels_list');
-                if (targetKey && targetKey.value) {
-                    rawValue = targetKey.value;
-                }
+            if (keysData && keysData.keys && Array.isArray(keysData.keys)) {
+                console.log("Список ключей в облаке получен:", keysData.keys);
+                hasProgressInCloud = keysData.keys.includes('completed_levels_list');
+                hasPremiumInCloud = keysData.keys.includes('unlocked_premium_levels');
             }
-
-            if (rawValue) {
-                const parsedData = JSON.parse(rawValue);
-                if (Array.isArray(parsedData)) {
-                    completed_levels = parsedData;
-                    console.log("Успешно загружен прогресс из VK Cloud Storage:", completed_levels);
-                }
-            } else {
-                console.log("В VK Cloud Storage нет сохраненного прогресса, пробуем localStorage");
-                const localData = localStorage.getItem('completed_levels_list');
-                if (localData) {
-                    completed_levels = JSON.parse(localData);
-                    console.log("Загружен локальный прогресс из localStorage:", completed_levels);
-                }
-            }
-        } catch (vkStorageError) {
-            console.warn("ВК Cloud задерживается или вернул ошибку. Экстренно включаем локальный бэкап:", vkStorageError.message);
-            const localData = localStorage.getItem('completed_levels_list');
-            if (localData) {
-                completed_levels = JSON.parse(localData);
-                console.log("Загружен локальный прогресс из localStorage:", completed_levels);
-            }
+        } catch (keysError) {
+            console.warn("Не удалось получить список ключей из ВК (таймаут или сбой сети):", keysError.message);
         }
 
-        // 3. Получение открытых премиум-пакетов с жестким лимитом ожидания в 300 мс!
-        try {
-            console.log("Запрос unlocked_premium_levels из VK Cloud Storage...");
+        // =========================================================================
+        // 3. ПОЛУЧЕНИЕ ПРОЙДЕННЫХ УРОВНЕЙ
+        // =========================================================================
+        if (hasProgressInCloud) {
+            try {
+                const storageData = await Promise.race([
+                    vkBridge.send('VKWebAppStorageGet', { keys: ['completed_levels_list'] }),
+                    timeoutProvider(1000)
+                ]);
 
-            const storageData = await Promise.race([
-                vkBridge.send('VKWebAppStorageGet', { keys: ['unlocked_premium_levels'] }),
-                timeoutProvider(1000)
-            ]);
-
-            let rawValue = null;
-            if (storageData && storageData.keys && Array.isArray(storageData.keys)) {
-                // Безопасно ищем нужный ключ в массиве ответов ВК
-                const targetKey = storageData.keys.find(item => item.key === 'unlocked_premium_levels');
-                if (targetKey && targetKey.value) {
-                    rawValue = targetKey.value;
+                if (storageData && storageData.keys && Array.isArray(storageData.keys)) {
+                    const targetKey = storageData.keys.find(item => item.key === 'completed_levels_list');
+                    if (targetKey && targetKey.value) {
+                        const parsedData = JSON.parse(targetKey.value);
+                        if (Array.isArray(parsedData)) {
+                            completed_levels = parsedData;
+                            console.log("Успешно загружен прогресс из VK Cloud:", completed_levels);
+                        }
+                    }
                 }
+            } catch (err) {
+                console.warn("Ошибка загрузки completed_levels_list, включаем localStorage:", err.message);
+                const localData = localStorage.getItem('completed_levels_list');
+                if (localData) completed_levels = JSON.parse(localData);
             }
+        } else {
+            console.log("Ключа прогресса в облаке нет. Проверяем локальный localStorage...");
+            const localData = localStorage.getItem('completed_levels_list');
+            if (localData) completed_levels = JSON.parse(localData);
+        }
 
-            if (rawValue) {
-                const parsedData = JSON.parse(rawValue);
-                if (Array.isArray(parsedData)) {
-                    unlocked_premium_levels = parsedData;
-                    console.log('Успешно загружены открытые уровни из VK Storage:', unlocked_premium_levels);
+        // =========================================================================
+        // 4. ПОЛУЧЕНИЕ ОТКРЫТЫХ ПРЕМИУМ-ПАКЕТОВ
+        // =========================================================================
+        if (hasPremiumInCloud) {
+            try {
+                const storageData = await Promise.race([
+                    vkBridge.send('VKWebAppStorageGet', { keys: ['unlocked_premium_levels'] }),
+                    timeoutProvider(1000)
+                ]);
+
+                if (storageData && storageData.keys && Array.isArray(storageData.keys)) {
+                    const targetKey = storageData.keys.find(item => item.key === 'unlocked_premium_levels');
+                    if (targetKey && targetKey.value) {
+                        const parsedData = JSON.parse(targetKey.value);
+                        if (Array.isArray(parsedData)) {
+                            unlocked_premium_levels = parsedData;
+                            console.log('Успешно загружены премиум уровни из VK Cloud:', unlocked_premium_levels);
+                        }
+                    }
                 }
-            } else {
-                console.log("В VK Storage нет открытых премиум уровней, массив пуст.");
-                unlocked_premium_levels = [];
+            } catch (err) {
+                console.warn("Ошибка загрузки премиума, включаем localStorage:", err.message);
+                const localPremiumData = localStorage.getItem('unlocked_premium_levels');
+                if (localPremiumData) unlocked_premium_levels = JSON.parse(localPremiumData);
             }
-        } catch (error) {
-            console.warn('ВК Cloud по премиум-пакетам задерживается. Включаем локальный бэкап:', error.message);
+        } else {
+            console.log("Ключа премиума в облаке нет. Проверяем локальный localStorage...");
             const localPremiumData = localStorage.getItem('unlocked_premium_levels');
-            if (localPremiumData) {
-                unlocked_premium_levels = JSON.parse(localPremiumData);
-                console.log("Загружены открытые премиум уровни из localStorage:", unlocked_premium_levels);
-            } else {
-                unlocked_premium_levels = [];
-            }
+            if (localPremiumData) unlocked_premium_levels = JSON.parse(localPremiumData);
         }
 
     } catch (e) {
-        console.error("Критическая ошибка при инициализации игры:", e);
+        console.error("Критический сбой инициализации:", e);
         initLocalization(currentLang);
-        completed_levels = [];
     }
 
-    // МГНОВЕННЫЙ ЗАПУСК ИНТЕРФЕЙСА: Скрипты отработают максимум через 600мс суммарно!
+    // МГНОВЕННЫЙ СТАРТ ИНТЕРФЕЙСА
     preloadSounds();
     renderLevels();
 
-    // Снимаем черный экран загрузки/оверлей, так как сетка уровней уже нарисована в фоне
     const overlay = document.getElementById('loading-overlay');
-    if (overlay) {
-        overlay.classList.add('hidden');
-    }
+    if (overlay) overlay.classList.add('hidden');
 
-    console.log("Игра готова к запуску на платформе VK. Задержки ликвидированы!");
+    console.log("Инициализация завершена по высшему разряду!");
 }
+
 
 
 // === Запуск ===
