@@ -690,7 +690,7 @@ async function markLevelAsCompleted(levelId) {
     }
 
     localStorage.setItem('completed_levels_list', JSON.stringify(completed_levels));
-    console.log("Локальный бэкап сохранен в localStorage смартфона.");
+    console.log("Локальный бэкап сохранен в localStorage");
 
     // 3. СИНХРОНИЗАЦИЯ: Фоновым асинхронным запросом отправляем данные в облако ВК
     try {
