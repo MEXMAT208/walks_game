@@ -1241,16 +1241,11 @@ async function Start() {
 */
 
 async function Start() {
-    // Сюда мы будем собирать всю информацию для вывода на экран
-    let debugLog = [];
-
     try {
         const urlParams = new URLSearchParams(window.location.search);
         const vkLang = urlParams.get('vk_language') || 'ru';
         currentLang = vkLang;
         initLocalization(currentLang);
-
-        debugLog.push("🚀 Старт диагностики...");
 
         // Отправляем запросы в ВК
         const progressPromise = vkBridge.send('VKWebAppStorageGet', { keys: ['completed_levels_list'] });
@@ -1263,12 +1258,12 @@ async function Start() {
             // Даем мобильному Android целых 2.5 секунды, чтобы точно исключить таймаут интернета
             const storageData = await Promise.race([progressPromise, timeoutProvider(2500)]);
 
-            debugLog.push(`ВК Ответ: ${typeof storageData === 'object' ? JSON.stringify(storageData).substring(0, 80) : typeof storageData}`);
+            console.log(`ВК Ответ: ${typeof storageData === 'object' ? JSON.stringify(storageData).substring(0, 80) : typeof storageData}`);
 
             if (storageData && storageData.keys && Array.isArray(storageData.keys) && storageData.keys.length > 0) {
                 // Извлекаем значение
                 const rawValue = storageData.keys[0].value;
-                debugLog.push(`Сырой String из ВК: ${rawValue ? rawValue : 'пусто'}`);
+                console.log(`Сырой String из ВК: ${rawValue ? rawValue : 'пусто'}`);
 
                 if (rawValue) {
                     const parsedData = JSON.parse(rawValue);
@@ -1277,17 +1272,17 @@ async function Start() {
                     }
                 }
             } else {
-                debugLog.push("ВК вернул пустую структуру/нет ключа");
+                console.log("ВК вернул пустую структуру/нет ключа");
             }
         } catch (err) {
-            debugLog.push(`Ошибка ВК: ${err.message}`);
+            console.log(`Ошибка ВК: ${err.message}`);
         }
 
         // =========================================================================
         // ТЕСТ 2: ПРОВЕРКА ЛОКАЛЬНОЙ ПАМЯТИ (localStorage)
         // =========================================================================
         const localData = localStorage.getItem('completed_levels_list');
-        debugLog.push(`В localStrg лежит: ${localData ? localData : 'ничего нет'}`);
+        console.log(`В localStrg лежит: ${localData ? localData : 'ничего нет'}`);
 
         if (completed_levels.length === 0 && localData) {
             completed_levels = JSON.parse(localData);
@@ -1307,7 +1302,7 @@ async function Start() {
         }
 
     } catch (e) {
-        debugLog.push(`Критический сбой: ${e.message}`);
+        console.logh(`Критический сбой: ${e.message}`);
     }
 
     // Рендерим уровни в фоне
@@ -1316,34 +1311,6 @@ async function Start() {
 
     const overlay = document.getElementById('loading-overlay');
     if (overlay) overlay.classList.add('hidden');
-
-    // =========================================================================
-    // ВЫВОД ВСЕХ КЛЮЧЕЙ И МАССИВОВ НА ЭКРАН В МОДАЛЬНОЕ ОКНО
-    // =========================================================================
-    const testModal = document.getElementById('premium-unlock-modal');
-    const testModalText = document.getElementById('unlock-modal-text');
-    const testModalTitle = document.getElementById('unlock-modal-title');
-
-    if (testModal && testModalText && testModalTitle) {
-        testModalTitle.innerText = "📟 Терминал отладки";
-
-        // Добавляем в финальный отчет итоговые массивы, которые получились в памяти игры
-        debugLog.push(`\nИТОГ в игре:`);
-        debugLog.push(`completed_levels: [${completed_levels.join(', ')}]`);
-        debugLog.push(`unlocked_premium: [${unlocked_premium_levels.join(', ')}]`);
-
-        // Склеиваем весь массив логов в один текст с переносом строк
-        testModalText.innerText = debugLog.join('\n');
-
-        // Кастомизируем стили текста, чтобы влезло много строчек на экран телефона
-        testModalText.style.whiteSpace = "pre-line";
-        testModalText.style.textAlign = "left";
-        testModalText.style.fontSize = "12px"; // Делаем шрифт компактным, как в консоли
-        testModalText.style.fontFamily = "monospace";
-
-        // Показываем окно
-        testModal.style.setProperty('display', 'flex', 'important');
-    }
 }
 
 
