@@ -406,7 +406,15 @@ button,
 /* Для очень узких экранов (iPhone SE) — 3 колонки */
 @media (max-width: 420px) {
     .game-title {
-        font-size: 32px; /* Чуть уменьшили (было 36), чтобы заголовок игры не ломал экран */
+        font-size: 35px;
+    }
+
+    .stat {
+        font-size: 14px;
+    }
+
+    .stat strong {
+        font-size: 26px;
     }
 
     /* ИСПРАВЛЕНИЕ СЕТКИ УРОВНЕЙ */
