@@ -185,7 +185,7 @@
 
     .top-panel, #top_panel {
         /* ЖЕСТКИЙ СДВИГ ВНИЗ: 75px полностью освободят место под плашку ВК и челку смартфона */
-        padding-top: 75px !important;
+        padding-top: 65px !important;
         padding-bottom: 15px !important;
         padding-left: 15px !important;
         padding-right: 15px !important;
