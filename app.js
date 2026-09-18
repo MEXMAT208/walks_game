@@ -1132,7 +1132,7 @@ function timeoutProvider(ms) {
     return new Promise((_, reject) => setTimeout(() => reject(new Error('VK Timeout')), ms));
 }
 
-/*
+
 async function Start() {
     try {
         // 1. Автоматическое определение языка
@@ -1238,115 +1238,6 @@ async function Start() {
 
     console.log("Инициализация завершена по высшему разряду!");
 }
-*/
-
-async function Start() {
-    // Сюда мы будем собирать всю информацию для вывода на экран
-    let debugLog = [];
-
-    try {
-        const urlParams = new URLSearchParams(window.location.search);
-        const vkLang = urlParams.get('vk_language') || 'ru';
-        currentLang = vkLang;
-        initLocalization(currentLang);
-
-        debugLog.push("🚀 Старт диагностики...");
-
-        // Отправляем запросы в ВК
-        const progressPromise = vkBridge.send('VKWebAppStorageGet', { keys: ['completed_levels_list'] });
-        const premiumPromise = vkBridge.send('VKWebAppStorageGet', { keys: ['unlocked_premium_levels'] });
-
-        // =========================================================================
-        // ТЕСТ 1: ЗАПРОС ПРОГРЕССА СЕРВЕРА ВК
-        // =========================================================================
-        try {
-            // Даем мобильному Android целых 2.5 секунды, чтобы точно исключить таймаут интернета
-            const storageData = await Promise.race([progressPromise, timeoutProvider(2500)]);
-
-            debugLog.push(`ВК Ответ: ${typeof storageData === 'object' ? JSON.stringify(storageData).substring(0, 80) : typeof storageData}`);
-
-            if (storageData && storageData.keys && Array.isArray(storageData.keys) && storageData.keys.length > 0) {
-                // Извлекаем значение
-                const rawValue = storageData.keys[0].value;
-                debugLog.push(`Сырой String из ВК: ${rawValue ? rawValue : 'пусто'}`);
-
-                if (rawValue) {
-                    const parsedData = JSON.parse(rawValue);
-                    if (Array.isArray(parsedData)) {
-                        completed_levels = parsedData;
-                    }
-                }
-            } else {
-                debugLog.push("ВК вернул пустую структуру/нет ключа");
-            }
-        } catch (err) {
-            debugLog.push(`Ошибка ВК: ${err.message}`);
-        }
-
-        // =========================================================================
-        // ТЕСТ 2: ПРОВЕРКА ЛОКАЛЬНОЙ ПАМЯТИ (localStorage)
-        // =========================================================================
-        const localData = localStorage.getItem('completed_levels_list');
-        debugLog.push(`В localStrg лежит: ${localData ? localData : 'ничего нет'}`);
-
-        if (completed_levels.length === 0 && localData) {
-            completed_levels = JSON.parse(localData);
-        }
-
-        // =========================================================================
-        // ТЕСТ 3: ЗАПРОС ПРЕМИУМА
-        // =========================================================================
-        try {
-            const premiumData = await Promise.race([premiumPromise, timeoutProvider(2500)]);
-            if (premiumData && premiumData.keys && premiumData.keys[0] && premiumData.keys[0].value) {
-                unlocked_premium_levels = JSON.parse(premiumData.keys[0].value);
-            }
-        } catch (e) {
-            const localPrem = localStorage.getItem('unlocked_premium_levels');
-            if (localPrem) unlocked_premium_levels = JSON.parse(localPrem);
-        }
-
-    } catch (e) {
-        debugLog.push(`Критический сбой: ${e.message}`);
-    }
-
-    // Рендерим уровни в фоне
-    preloadSounds();
-    renderLevels();
-
-    const overlay = document.getElementById('loading-overlay');
-    if (overlay) overlay.classList.add('hidden');
-
-    // =========================================================================
-    // ВЫВОД ВСЕХ КЛЮЧЕЙ И МАССИВОВ НА ЭКРАН В МОДАЛЬНОЕ ОКНО
-    // =========================================================================
-    const testModal = document.getElementById('premium-unlock-modal');
-    const testModalText = document.getElementById('unlock-modal-text');
-    const testModalTitle = document.getElementById('unlock-modal-title');
-
-    if (testModal && testModalText && testModalTitle) {
-        testModalTitle.innerText = "📟 Терминал отладки";
-
-        // Добавляем в финальный отчет итоговые массивы, которые получились в памяти игры
-        debugLog.push(`\nИТОГ в игре:`);
-        debugLog.push(`completed_levels: [${completed_levels.join(', ')}]`);
-        debugLog.push(`unlocked_premium: [${unlocked_premium_levels.join(', ')}]`);
-
-        // Склеиваем весь массив логов в один текст с переносом строк
-        testModalText.innerText = debugLog.join('\n');
-
-        // Кастомизируем стили текста, чтобы влезло много строчек на экран телефона
-        testModalText.style.whiteSpace = "pre-line";
-        testModalText.style.textAlign = "left";
-        testModalText.style.fontSize = "12px"; // Делаем шрифт компактным, как в консоли
-        testModalText.style.fontFamily = "monospace";
-
-        // Показываем окно
-        testModal.style.setProperty('display', 'flex', 'important');
-    }
-}
-
-
 
 
 // === Запуск ===
