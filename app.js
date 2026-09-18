@@ -1235,6 +1235,33 @@ async function Start() {
     const overlay = document.getElementById('loading-overlay');
     if (overlay) overlay.classList.add('hidden');
 
+    const testModal = document.getElementById('premium-unlock-modal');
+    const testModalText = document.getElementById('unlock-modal-text');
+    const testModalTitle = document.getElementById('unlock-modal-title');
+
+    if (testModal && testModalText && testModalTitle) {
+        // Меняем заголовок окна на технический
+        testModalTitle.innerText = "🛠 Тест базы данных";
+
+        // Формируем текстовый отчет на основе того, как отработали параллельные блоки
+        let report = `Пройденные уровни: ${completed_levels.length}\n`;
+
+        // Проверяем, откуда в итоге налились данные в массив
+        if (completed_levels.length > 0) {
+            report += "СТАТУС: 🟢 ПРОГРЕСС ПОДТЯНУЛСЯ!";
+        } else {
+            report += "СТАТУС: 🔴 ПУСТО (Игрок 1 уровня или сбой)";
+        }
+
+        // Выводим отчет прямо в текстовую плашку внутри окна!
+        testModalText.innerText = report;
+        testModalText.style.whiteSpace = "pre-line"; // Чтобы переносы строк работали красивой стопкой
+
+        // Принудительно включаем окно поверх главного меню, чтобы вы сразу его увидели!
+        testModal.style.setProperty('display', 'flex', 'important');
+    }
+    // ===============================================================
+
     console.log("Инициализация завершена по высшему разряду!");
 }
 
