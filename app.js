@@ -816,13 +816,6 @@ async function show_win_modal() {
         first_time = !completed_levels.includes(parseInt(curr_level));
         await markLevelAsCompleted(curr_level)
 
-        try {
-            if (typeof updateVKLeaderboard === 'function') {
-                updateVKLeaderboard(completed_levels.length);
-            }
-        } catch (leaderboardError) {
-            console.warn("Локальный тест: Лидерборд VK недоступен вне платформы.", leaderboardError);
-        }
     }
 
     if (first_time) {
@@ -1097,33 +1090,23 @@ function initLocalization(lang) {
     });
 }
 
-function updateVKLeaderboard(score) {
-    // Используем фоновое сохранение в VK Storage.
-    // Ключ 'level' или 'score' распознается игровой платформой VK автоматически
-    vkBridge.send("VKWebAppStorageSet", {
-        "key": "level",
-        "value": String(score) // VK принимает только строковые значения
+
+
+function showVKLeaderboard() {
+    // Проверяем, что массив существует, чтобы избежать ошибок
+    const score = (typeof completed_levels !== 'undefined' && completed_levels) ? completed_levels.length : 0;
+
+    vkBridge.send("VKWebAppShowLeaderBoardBox", {
+        "user_result": Number(score) // Передаем количество пройденных уровней как число
     })
     .then(data => {
+        // Обратите внимание: VK Bridge в успехе возвращает { result: true }, а не success
         if (data.result) {
-            console.log("Рекорд успешно обновлен в VK в фоновом режиме.");
+            console.log("Окно лидерборда успешно открыто, очки обновлены.");
         }
     })
     .catch(error => {
-        console.error("Ошибка фонового обновления лидерборда в VK:", error);
-    });
-}
-
-function showVKLeaderboardWindow() {
-    // Вызываем окно лиги друзей ТОЛЬКО при нажатии на кнопку кубка в меню
-    vkBridge.send("VKWebAppShowLeaderBoardBox", {
-        "user_result": 0 // Передаем 0, чтобы просто открыть окно без перезаписи очков
-    })
-    .then(data => {
-        console.log("Игрок закрыл окно лидерборда.");
-    })
-    .catch(error => {
-        console.error("Не удалось открыть окно лидерборда:", error);
+        console.error("Ошибка при работе с лидербордом:", error);
     });
 }
 
@@ -1337,7 +1320,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     cup = document.getElementById('cup');
     cup.onclick = () => {
-        showVKLeaderboardWindow();
+        showVKLeaderboard();
     }
 
     rnd_button = document.getElementById('random-btn');
