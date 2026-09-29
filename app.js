@@ -64,7 +64,7 @@ const translations = {
         to_menu: "\u{1F3E0} В меню",
         retry: "\u{1F504} Попробовать снова",
         next: "Дальше →",
-        random_level: "\u{1F39E} Случайный уровень",
+        random_level: "Случайный уровень",
         generating: "Генерируем уровень",
         random_level_text: "Случайный уровень",
         again: "Уровень пройден снова!",
@@ -86,7 +86,7 @@ const translations = {
         to_menu: "\u{1F3E0} To menu",
         retry: "\u{1F504} Try again",
         next: "Next →",
-        random_level: "\u{1F39E} Random level",
+        random_level: "Random level",
         generating: "Generate level",
         random_level_text: "Random level",
         again: "Level is completed again!",
@@ -362,7 +362,35 @@ function renderLevels() {
 
         if (state === 'locked') {
             btn.innerHTML = `<div class="lock-icon">🔒</div>`;
-        }  else {
+        } else if (state === 'premium') {
+            // Вычисляем позицию уровня внутри его пачки по 5 штук (от 1 до 5)
+            // Если уровни начинаются с 1, то: 1-5 (пачка 1), 6-10 (пачка 2) и т.д.
+            const positionInPack = ((levelNum - 1) % 5) + 1;
+
+            if (positionInPack === 1) {
+                // ЭТО ПЕРВЫЙ УРОВЕНЬ В ПЯТЁРКЕ: красим левый угол и вешаем бейдж ТВ
+                btn.className = `level-btn premium pack-start`;
+                btn.innerHTML = `
+                    <span class="adv-badge">
+                        <svg xmlns="http://w3.org" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M17 3l-5 5-5-5"/>
+                            <rect width="20" height="15" x="2" y="7" rx="3"/>
+                            <path d="m10 11 5 3-5 3v-6z" fill="currentColor"/>
+                        </svg>
+                    </span>
+                    <div class="level-number">${levelNum}</div>
+                `;
+            } else if (positionInPack === 5) {
+                // ЭТО ПОСЛЕДНИЙ УРОВЕНЬ В ПЯТЁРКЕ: красим только правый угол
+                btn.className = `level-btn premium pack-end`;
+                btn.innerHTML = `<div class="level-number">${levelNum}</div>`;
+            } else {
+                // СРЕДНИЕ УРОВНИ (2, 3, 4): обычные прямоугольные ячейки пачки
+                btn.className = `level-btn premium pack-middle`;
+                btn.innerHTML = `<div class="level-number">${levelNum}</div>`;
+            }
+        }
+        else {
             btn.innerHTML = `<div class="level-number">${levelNum}</div>`;
         }
 

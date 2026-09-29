@@ -338,7 +338,52 @@ button,
 .level-btn.premium {
     background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
     border: 4px solid #6c3483;
+    border-radius: 0px !important;
     cursor: pointer;
+}
+
+/* Первый уровень в ряду: скругляем только левые углы */
+.level-btn.premium.pack-start {
+    border-top-left-radius: 2vmin !important;
+    border-bottom-left-radius: 2vmin !important;
+}
+
+/* Последний уровень в ряду: скругляем только правые углы */
+.level-btn.premium.pack-end {
+    border-top-right-radius: 2vmin !important;
+    border-bottom-right-radius: 2vmin !important;
+}
+
+/* Стилизация бейджа телевизора (он висит на первой кнопке ряда) */
+.level-btn.premium .adv-badge {
+    position: absolute !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 10 !important;
+
+    /* Выталкиваем бейдж НАВЕРХ над первым уровнем,
+       чтобы он визуально указывал на всю строку */
+    top: -1.8vmin !important;
+    left: -1.2vmin !important;  /* Сдвиг влево на угол ряда */
+
+    width: 3.8vmin !important;
+    height: 3.8vmin !important;
+
+    border-radius: 25% !important;
+
+    background-color: #2ed573 !important;    /* Сочный, неоновый салатовый цвет */
+    color: #ffffff !important;               /* Белые линии внутри SVG */
+    border: 0.3vmin solid #ffffff !important; /* Чёткий белый внешний контур */
+
+    /* Тёмная полупрозрачная тень, чтобы приподнять значок над фиолетовой ячейкой */
+    box-shadow: 0 0.4vmin 0.8vmin rgba(0, 0, 0, 0.3) !important;
+}
+
+.level-btn.premium .adv-badge svg {
+    width: 65% !important;
+    height: 65% !important;
+    display: block !important;
 }
 
 .level-btn.premium:hover {
@@ -346,16 +391,10 @@ button,
     box-shadow: 0 5px 15px rgba(155, 89, 182, 0.4);
 }
 
-.level-btn.premium::after {
-    content: '\1f39e';
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    font-size: 16px;
-}
 
 /* Кнопка случайного уровня */
-.random-btn {
+.random-btn-adv {
+    position: relative;
     margin-top: 30px;
     padding: 15px 40px;
     font-size: 20px;
@@ -370,9 +409,34 @@ button,
     box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
 }
 
-.random-btn:hover {
+.random-btn-adv:hover {
     transform: scale(1.05);
     box-shadow: 0 6px 20px rgba(76, 175, 80, 0.6);
+}
+
+.adv-badge {
+    position: absolute;
+    /* Позиционирование в правый верхний угол в % */
+    top: -15%;
+    right: -5%;
+
+    /* Размер бейджа высчитывается от высоты кнопки */
+    height: 55%;
+    aspect-ratio: 1 / 1; /* Делает элемент строго квадратным, независимо от экрана */
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 25% !important;
+
+    background-color: #2ed573 !important;    /* Сочный, неоновый салатовый цвет */
+    color: #ffffff !important;               /* Белые линии внутри SVG */
+    border: 0.3vmin solid #ffffff !important; /* Чёткий белый внешний контур */
+
+    /* Тёмная полупрозрачная тень, чтобы приподнять значок над фиолетовой ячейкой */
+    box-shadow: 0 0.4vmin 0.8vmin rgba(0, 0, 0, 0.3) !important;
+    z-index: 10;
 }
 
 /* Загрузка */
@@ -505,32 +569,6 @@ button,
         padding: 0 !important;
         display: block !important;
     }
-}
-
-
-.btn-premium:hover {
-    transform: scale(1.05);
-    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
-}
-
-/* Премиум-уровни */
-.level-btn.premium {
-    background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
-    border: 4px solid #6c3483;
-    cursor: pointer;
-}
-
-.level-btn.premium:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(155, 89, 182, 0.4);
-}
-
-.level-btn.premium::after {
-    content: '\1f39e';
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    font-size: 16px;
 }
 
 .premium-modal-content {
